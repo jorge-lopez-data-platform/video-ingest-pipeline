@@ -1,9 +1,25 @@
-# ingesta-redes — Pipeline de ingesta de TikTok en Databricks
+# video-ingest-pipeline — Ingesta de métricas de TikTok en Databricks
 
 Ingesta diaria de métricas públicas de TikTok (vistas, likes, shares, comentarios,
 datos del creador) desde la API de Apify hacia un lakehouse en Unity Catalog,
 con modelado en capas bronze → silver → gold y un job de descarga de los videos
 propios del usuario.
+
+Convierte la actividad pública de TikTok en tablas analizables. Un job diario lanza
+el actor `clockworks/tiktok-scraper` de Apify sobre un conjunto de hashtags,
+descarga el dataset paginado y lo escribe en `tiktok.bronze.raw_videos` como un
+histórico de observaciones: cada ejecución añade un snapshot, de modo que se puede
+medir cómo crecen las métricas de un video con el tiempo, no solo su estado final.
+
+Sobre ese histórico se reconstruyen `tiktok.silver.videos` (último snapshot por
+video, con engagement rate, share rate y views-per-follower) y
+`tiktok.gold.creator_kpis` (KPIs por creador clasificados en tiers de audiencia).
+Una variante curada añade `gold.viral_candidates`, que selecciona videos en español
+de menos de 30 días que destacan a la vez en las tres dimensiones de viralidad, no
+solo en vistas.
+
+El diseño prioriza que un fallo sea visible: un dataset vacío o un cambio de
+esquema del actor lanza excepción en lugar de dejar un job en verde con cero datos.
 
 Todo el contenido que descarga este repo es **propio**. La parte que descargaba y
 republicaba videos de otros creadores está archivada y fuera de este repositorio;
@@ -80,7 +96,7 @@ entender alcance y engagement, no monetización.
 ## Estructura del repositorio
 
 ```
-ingesta-redes/
+video-ingest-pipeline/
 ├── notebooks/
 │   ├── 01_ingest_tiktok.py         # Apify → bronze → silver → gold
 │   └── 02_download_own_video.py    # descarga solo los videos propios
