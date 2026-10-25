@@ -1,0 +1,5 @@
+[tool.pytest.ini_options]
+# Añade la raíz del repo a sys.path para que los tests puedan importar
+# ingest_lib sin instalar el paquete.
+pythonpath = ["."]
+testpaths = ["tests"]
