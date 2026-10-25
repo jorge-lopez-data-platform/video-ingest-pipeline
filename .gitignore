@@ -1,7 +1,21 @@
+# Secretos
 .env
 *.env
+.databricks/
+
+# Entornos virtuales
+.venv/
+venv/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Datos locales: videos, volcados y artefactos de ejecución
 *.mp4
 *.mov
-__pycache__/
-*.pyc
-.databricks/
+*.wav
+*.mp3
+output/
+*.log

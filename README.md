@@ -1,82 +1,181 @@
-# tiktok_viral_videos
+# ingesta-redes — Pipeline de ingesta de TikTok en Databricks
 
-Pipeline de Databricks que detecta videos virales de TikTok, los descarga y los publica en una cuenta mediante la Content Posting API. Incluye además un script independiente para publicar por API desde local y un generador de videos originales.
+Ingesta diaria de métricas públicas de TikTok (vistas, likes, shares, comentarios,
+datos del creador) desde la API de Apify hacia un lakehouse en Unity Catalog,
+con modelado en capas bronze → silver → gold y un job de descarga de los videos
+propios del usuario.
 
-## Estructura
+Todo el contenido que descarga este repo es **propio**. La parte que descargaba y
+republicaba videos de otros creadores está archivada y fuera de este repositorio;
+ver [Aviso legal](#aviso-legal).
 
-```
-tiktok_viral_videos/
-├── notebooks/
-│   ├── 01_scrape_viral_videos.py   # Apify: busca por hashtag y elige el video con más plays
-│   ├── 02_download_video.py        # Descarga el mp4 a un Volume de Unity Catalog
-│   └── 03_upload_to_tiktok.py      # Direct Post a TikTok y polling del estado
-├── scripts/
-│   ├── direct_post.py              # Mismo flujo de subida, ejecutable desde local
-│   └── generate_original_video.sh  # Genera un video vertical original con ffmpeg
-└── docs/
-    ├── SETUP.md                    # Configuración paso a paso
-    └── TROUBLESHOOTING.md          # Errores conocidos y solución
-```
+## Índice
+
+- [Qué hace](#qué-hace)
+- [Arquitectura](#arquitectura)
+- [Modelo de datos](#modelo-de-datos)
+- [Estructura del repositorio](#estructura-del-repositorio)
+- [Requisitos](#requisitos)
+- [Puesta en marcha](#puesta-en-marcha)
+- [Operación](#operación)
+- [Desarrollo local](#desarrollo-local)
+- [Aviso legal](#aviso-legal)
+
+Documentación detallada: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md),
+[docs/SETUP.md](docs/SETUP.md), [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md).
+
+## Qué hace
+
+1. **Ingesta** (`notebooks/01_ingest_tiktok.py`). Lanza el actor
+   `clockworks~tiktok-scraper` de Apify para una lista de hashtags, espera a que
+   termine, descarga el dataset paginado y lo añade a `tiktok.bronze.raw_videos`.
+   Cada fila es una *observación* con su propio `ingested_at`: ingerir dos veces el
+   mismo video produce dos snapshots, no un duplicado lógico.
+
+2. **Modelado** (misma tarea, al final). Reconstruye
+   `tiktok.silver.videos` (último snapshot por `video_id`, con métricas derivadas)
+   y `tiktok.gold.creator_kpis` (KPIs agregados por creador con su tier).
+   La variante curada añade además `gold.viral_candidates`.
+
+3. **Descarga de videos propios** (`notebooks/02_download_own_video.py`).
+   Descarga por `yt-dlp` solo videos cuyo autor esté en `own_handles`; cualquier
+   otro se omite con estado `skipped` antes de iniciar la descarga.
 
 ## Arquitectura
 
-Job de Databricks `tiktok_viral_pipeline` con 3 tareas encadenadas. Las tareas se pasan datos con `dbutils.jobs.taskValues`.
-
-| Tarea | Notebook | Entradas | Salidas (taskValues) |
-|---|---|---|---|
-| `scrape_viral_videos` | `01_scrape_viral_videos` | secret `apify_token`, hashtags `fyp` y `viral` | `video_url`, `video_id`, `caption` (150 caracteres) |
-| `download_video` | `02_download_video` | `video_url`, `video_id` | `local_video_path` (`/Volumes/tiktok/default/videos/<id>.mp4`) |
-| `upload_to_tiktok` | `03_upload_to_tiktok` | `local_video_path`, `caption`, secret `tiktok_access_token` | `publish_id` y estado en el log |
-
 ```
-Apify (clockworks~tiktok-scraper)
-        │  50 resultados por hashtag, orden por playCount
-        ▼
-01 scrape ──► 02 download ──► 03 upload ──► TikTok Content Posting API
-                  │                              (init → PUT → status)
+   Apify: clockworks~tiktok-scraper
+              │  run (hashtags × resultsPerPage, tope de gasto)
+              ▼
+   ┌──────────────────────────────┐
+   │ 01_ingest_tiktok             │   polling del run → dataset paginado
+   └──────────────┬───────────────┘
+                  ▼ append
+        tiktok.bronze.raw_videos          (histórico de observaciones)
+                  │ CREATE OR REPLACE (dedupe por video_id)
                   ▼
-      Volume tiktok.default.videos
+        tiktok.silver.videos              (último snapshot + métricas derivadas)
+                  │ GROUP BY author_id
+                  ▼
+        tiktok.gold.creator_kpis          (KPIs por creador + tier)
+                  │
+        tiktok.gold.viral_candidates      (solo en la variante curada)
 ```
 
-Datos relacionados: la tabla `tiktok.bronze.raw_videos` guarda métricas de videos scrapeados (`video_id`, `author_name`, `play_count`, `digg_count`, `share_count`, `video_url`, `source_hashtag`, `apify_run_id`, `ingested_at`, entre otras). Los notebooks de este repo no la escriben, y sirve para analizar qué contenido funciona.
+Detalle de tareas, idempotencia, coste y fallos en
+[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+
+## Modelo de datos
+
+| Tabla | Grano | Qué contiene |
+|---|---|---|
+| `tiktok.bronze.raw_videos` | una fila por video y ejecución | todas las métricas del actor, `apify_run_id`, `ingested_at` |
+| `tiktok.silver.videos` | una fila por `video_id` | último snapshot + `total_interactions`, `engagement_rate`, `share_rate`, `views_per_follower`, `age_days` |
+| `tiktok.gold.creator_kpis` | una fila por `author_id` | seguidores, videos muestreados, vistas, tasas, `creator_tier` |
+| `tiktok.gold.viral_candidates` | ≤ 50 filas | candidatos en español, ≤ 30 días, virales en las tres dimensiones, con `viral_score` |
+
+No hay datos de ingresos reales: todas las métricas son públicas y sirven para
+entender alcance y engagement, no monetización.
+
+## Estructura del repositorio
+
+```
+ingesta-redes/
+├── notebooks/
+│   ├── 01_ingest_tiktok.py         # Apify → bronze → silver → gold
+│   └── 02_download_own_video.py    # descarga solo los videos propios
+├── ingest_lib/
+│   └── parse.py                    # normalización de items, sin Spark (testeable)
+├── jobs/
+│   ├── ingest_daily.job.json       # job tiktok_ingest_daily (584295967848266)
+│   └── download_own_video.job.json # job tiktok_download_own_video (349008211136613)
+├── docs/
+│   ├── ARCHITECTURE.md             # diseño, decisiones, idempotencia y fallos
+│   ├── SETUP.md                    # alta del workspace, secrets, volumen, jobs
+│   └── TROUBLESHOOTING.md          # errores conocidos y solución
+├── scripts/
+│   └── generate_original_video.sh  # video vertical original con ffmpeg
+├── tests/
+├── requirements-dev.txt            # requests + pytest para desarrollo local
+└── .github/workflows/ci.yml        # compila notebooks y corre tests en cada push
+```
+
+Los JSON de `jobs/` son payloads válidos de `databricks jobs reset` (formato
+`{"job_id", "new_settings"}`, sin campos de solo lectura). Contienen ids de job y
+rutas del workspace, ningún secreto.
 
 ## Requisitos
 
-- Workspace de Databricks con Unity Catalog y un Volume `tiktok.default.videos`.
-- Secret scope `tiktok_pipeline` con las claves `apify_token` y `tiktok_access_token`.
-- App en el TikTok Developer Portal con el producto **Content Posting API**.
-- Token de usuario de TikTok con el scope `video.publish` (publicación directa) o `video.upload` (borrador).
+- Workspace de Databricks con Unity Catalog y el catálogo `tiktok`.
+- Volume `tiktok.default.videos`.
+- Secret scope `tiktok_pipeline` con `apify_token`.
+- Cuenta de Apify con saldo. El actor es de pago por uso y el job fija un tope
+  con `max_charge_usd`.
 
-Pasos detallados en [docs/SETUP.md](docs/SETUP.md).
+Pasos detallados: [docs/SETUP.md](docs/SETUP.md).
 
-## Uso
+## Puesta en marcha
 
-En Databricks, ejecuta el job `tiktok_viral_pipeline` desde Jobs & Pipelines.
+```bash
+# 1. Configura el perfil de la CLI
+databricks auth login --host https://<workspace> --profile <PERFIL>
 
-Desde local, con un token ya autorizado:
+# 2. Crea el catálogo y el volumen
+databricks experimental aitools tools query \
+  "CREATE CATALOG IF NOT EXISTS tiktok" --profile <PERFIL>
 
+# 3. Sube los secrets (nunca van en el repo)
+databricks secrets create-scope tiktok_pipeline --profile <PERFIL>
+databricks secrets put-secret tiktok_pipeline apify_token --profile <PERFIL>
+
+# 4. Importa los notebooks al workspace
+databricks workspace import-dir notebooks /tiktok_ingest --profile <PERFIL>
+
+# 5. Crea o restaura el job
+databricks jobs reset --json @jobs/ingest_daily.job.json --profile <PERFIL>
 ```
-set TIKTOK_ACCESS_TOKEN=act.xxxxx
-python scripts/direct_post.py ruta/video.mp4 "Titulo del video #hashtag"
+
+## Operación
+
+```bash
+databricks jobs list --profile <PERFIL>
+databricks jobs run-now --job-id 584295967848266 --profile <PERFIL>
+databricks jobs get-run-output <TASK_RUN_ID> --profile <PERFIL>
 ```
 
-El script consulta `creator_info` y usa `PUBLIC_TO_EVERYONE` solo si la cuenta lo permite. Si no, publica como `SELF_ONLY`.
+El job diario viene **en pausa** (`pause_status: PAUSED`, cron `0 0 6 * * ?` en UTC).
+Actívalo solo cuando el coste de Apify esté controlado: cada ejecución consume
+crédito real.
 
-Para generar un video original: `bash scripts/generate_original_video.sh` (requiere ffmpeg).
+## Desarrollo local
 
-## Limitaciones conocidas
+```bash
+python -m venv .venv
+.venv\Scripts\activate          # Windows
+pip install -r requirements-dev.txt
+pytest
+```
 
-- `scope_not_authorized` en el init: el token no tiene `video.publish`. Ver [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md).
-- Mientras la app de TikTok no esté auditada, los posts de Direct Post solo se permiten en modo privado (`SELF_ONLY`). El notebook 03 lo fuerza.
-- El PUT sube el archivo en un único chunk. Para videos grandes (más de 64 MB) hay que dividirlo en chunks.
+Los notebooks usan `dbutils`, así que no se ejecutan tal cual en local; los tests
+cubren las piezas puras (parseo, normalización, cálculo de métricas).
 
-## Aviso legal y de uso
+## Aviso legal
 
-El notebook 01 selecciona videos públicos de otros creadores, y el 02 y el 03 los descargan y republican. Reutilizar contenido ajeno sin permiso infringe los derechos de autor del creador y las normas de TikTok, y puede acabar en la suspensión de la cuenta. Tampoco se debe eliminar la metadata de un video para ocultar su origen.
+Este repositorio ingiere **métricas públicas** y descarga **solo videos propios**.
 
-Usa este pipeline únicamente con contenido propio o con licencia, o con permiso explícito. `scripts/generate_original_video.sh` sirve de punto de partida para producir contenido original.
+Descargar y republicar videos de otros creadores infringe sus derechos de autor y
+las normas de TikTok, y puede acabar en la suspensión de la cuenta. Tampoco se debe
+eliminar la metadata de un video para ocultar su origen. Por eso los notebooks
+`01_scrape_viral_videos`, `02_download_video` y `03_upload_to_tiktok`, que
+seleccionaban el video con más plays de `#fyp` y lo volvían a publicar, no forman
+parte de este repo: están archivados fuera de Git y no deben reintroducirse.
+
+Para producir contenido propio, `scripts/generate_original_video.sh` genera un
+video vertical original con ffmpeg como punto de partida.
 
 ## Seguridad
 
-- Ningún token se guarda en el repo. Los tokens viven en el secret scope de Databricks o en variables de entorno.
-- No subas archivos `.env`, tokens ni videos descargados (ver `.gitignore`).
+- Ningún token vive en el repo: los secrets están en el secret scope de Databricks
+  o en variables de entorno.
+- `jobs/*.json` no contiene credenciales, solo configuración.
+- `.gitignore` excluye `.env`, `*.mp4`, `.venv/` y `.databricks/`.

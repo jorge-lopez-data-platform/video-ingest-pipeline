@@ -1,48 +1,125 @@
 # Configuración
 
-## 1. TikTok Developer Portal
+Puesta en marcha desde cero. Ordena los pasos como los necesita el job, no como
+los agrupa mentalmente Databricks.
 
-1. Crea una app en el portal de desarrolladores de TikTok.
-2. Añade el producto **Content Posting API**.
-3. Activa los scopes que necesites:
-   - `video.publish`: publicación directa (Direct Post).
-   - `video.upload`: sube el video como borrador a la bandeja del usuario.
-   - `user.info.basic`: datos básicos de la cuenta.
-4. Mientras la app esté en sandbox, añade la cuenta que publicará como usuario de prueba.
-5. Para publicar en modo público, TikTok debe auditar la app. Antes de eso solo se admite `SELF_ONLY`.
+1. [CLI y perfil](#1-cli-y-perfil)
+2. [Catálogo, esquemas y volumen](#2-catálogo-esquemas-y-volumen)
+3. [Secret scope](#3-secret-scope)
+4. [Importar los notebooks](#4-importar-los-notebooks)
+5. [Crear los jobs](#5-crear-los-jobs)
+6. [Primera ejecución](#6-primera-ejecución)
 
-## 2. Obtener el access token
+## 1. CLI y perfil
 
-1. Lanza el flujo OAuth con la cuenta destino pidiendo el scope explícitamente:
-   `scope=user.info.basic,video.publish`
-2. En la pantalla de consentimiento, acepta todos los permisos. Si desmarcas alguno, el token quedará sin él.
-3. Intercambia el `code` por `access_token` y `refresh_token`.
-4. Los access tokens caducan. Renueva con el `refresh_token` cuando haga falta.
-
-## 3. Secrets en Databricks
-
-```
-databricks secrets create-scope tiktok_pipeline
-databricks secrets put-secret tiktok_pipeline apify_token
-databricks secrets put-secret tiktok_pipeline tiktok_access_token
+```bash
+databricks version          # debe ser >= 1.0
+databricks auth login --host https://<workspace>.cloud.databricks.com --profile <PERFIL>
+databricks auth profiles
 ```
 
-## 4. Volume de destino
+Usa siempre `--profile`. Sin él, la CLI toma el perfil marcado por defecto y es
+fácil lanzar algo contra el workspace equivocado.
 
-```sql
-CREATE VOLUME IF NOT EXISTS tiktok.default.videos;
+## 2. Catálogo, esquemas y volumen
+
+El notebook asume que el catálogo y los esquemas existen; no los crea.
+
+```bash
+databricks experimental aitools tools query \
+  "CREATE CATALOG IF NOT EXISTS tiktok" --profile <PERFIL>
+
+databricks experimental aitools tools query \
+  "CREATE SCHEMA IF NOT EXISTS tiktok.bronze" --profile <PERFIL>
+
+databricks experimental aitools tools query \
+  "CREATE SCHEMA IF NOT EXISTS tiktok.silver" --profile <PERFIL>
+
+databricks experimental aitools tools query \
+  "CREATE SCHEMA IF NOT EXISTS tiktok.gold" --profile <PERFIL>
+
+databricks experimental aitools tools query \
+  "CREATE VOLUME IF NOT EXISTS tiktok.default.videos" --profile <PERFIL>
 ```
 
-## 5. Importar los notebooks y crear el job
+## 3. Secret scope
 
-1. Importa `notebooks/*.py` en `/tiktok_pipeline/` del workspace.
-2. Crea un job `tiktok_viral_pipeline` con tres tareas encadenadas:
-   `scrape_viral_videos` → `download_video` → `upload_to_tiktok`, cada una apuntando a su notebook.
+```bash
+databricks secrets create-scope tiktok_pipeline --profile <PERFIL>
+databricks secrets put-secret tiktok_pipeline apify_token --profile <PERFIL>
+```
 
-## 6. Cambiar de publicación directa a borrador
+`put-secret` abre un editor interactivo; pega el token y guarda. Nunca lo pases
+como parámetro de job ni lo escribas en un archivo del repo.
 
-Si solo tienes `video.upload`, en `03_upload_to_tiktok.py`:
+Comprueba que quedó bien sin imprimir el valor:
 
-- Cambia la URL a `https://open.tiktokapis.com/v2/post/publish/inbox/video/init/`.
-- Elimina `privacy_level`, `disable_duet`, `disable_comment`, `disable_stitch` y `video_cover_timestamp_ms` de `post_info`.
-- El video aparecerá como borrador y habrá que publicarlo desde la app.
+```bash
+databricks secrets list-secrets tiktok_pipeline --profile <PERFIL>
+```
+
+## 4. Importar los notebooks
+
+```bash
+databricks workspace import-dir notebooks /tiktok_ingest --profile <PERFIL>
+databricks workspace import-dir ingest_lib /tiktok_ingest/ingest_lib --profile <PERFIL>
+```
+
+La segunda orden es obligatoria: el notebook `01_ingest_tiktok.py` importa
+`ingest_lib.parse` desde su carpeta hermana en el workspace. Si falta, el run
+muere con `ModuleNotFoundError: No module named 'ingest_lib'`.
+
+Los jobs de `jobs/` esperan los notebooks en `/Users/<tu-usuario>/tiktok_ingest/`.
+Si los importas en otra ruta, edita el `notebook_path` del JSON del job antes de
+aplicarlo.
+
+## 5. Crear los jobs
+
+Los archivos de `jobs/` están en el formato que acepta `jobs reset`: un objeto
+con `job_id` y `new_settings`.
+
+```bash
+# Job diario de ingesta
+databricks jobs reset --json @jobs/ingest_daily.job.json --profile <PERFIL>
+
+# Job que encadena ingesta + descarga de videos propios
+databricks jobs reset --json @jobs/download_own_video.job.json --profile <PERFIL>
+```
+
+Si los ids no existen en tu workspace, `reset` falla. En ese caso crea el job con
+`databricks jobs create --json` usando solo el contenido de `new_settings`.
+
+Dos campos son de solo lectura y **no** deben añadirse al JSON: `format`
+(y `created_time`, `creator_user_name`, `run_as_user_name`). Guardar el archivo
+con BOM UTF-8 también rompe el `reset` con un error de JSON que no menciona el BOM.
+
+## 6. Primera ejecución
+
+Antes de activar el cron, ejecuta una vez a mano con parámetros baratos:
+
+```bash
+databricks jobs run-now --job-id 584295967848266 \
+  --notebook-params '{"hashtags":"databricks","results_per_hashtag":"10","max_charge_usd":"0.5"}' \
+  --profile <PERFIL>
+```
+
+Verifica el resultado:
+
+```bash
+databricks jobs list-runs --job-id 584295967848266 --profile <PERFIL>
+databricks jobs get-run-output <TASK_RUN_ID> --profile <PERFIL>
+```
+
+La salida del notebook debe traer los conteos de bronze, silver, gold y
+`viral_candidates`. Si todo cuadra, activa el cron editando `pause_status` a
+`UNPAUSED` en `jobs/ingest_daily.job.json` y volviendo a aplicar el `reset`.
+
+## Descarga de videos propios
+
+El job `tiktok_download_own_video` recibe `urls`, `own_handles` y `output_dir`.
+Solo descarga si el autor del video está en `own_handles`; el resto queda como
+`skipped`. Ajusta `own_handles` a tus cuentas antes de usarlo.
+
+El job usa un entorno con `environment_version: 6` para poder instalar
+`yt-dlp` y `curl_cffi`. Si tu workspace no soporta entornos serverless, cámbialo
+a un clúster clásico y añade las librerías como dependencias del clúster.
