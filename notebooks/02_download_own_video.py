@@ -12,7 +12,7 @@ import re
 from yt_dlp import YoutubeDL
 
 dbutils.widgets.text("urls", "", "URLs de TikTok (separadas por coma o salto de linea)")
-dbutils.widgets.text("own_handles", "mckpc3", "Cuentas propias permitidas (separadas por coma, sin @)")
+dbutils.widgets.text("own_handles", "", "Cuentas propias permitidas (separadas por coma, sin @)")
 dbutils.widgets.text("output_dir", "/Volumes/tiktok/default/videos/own", "Carpeta de salida (Volume)")
 
 urls = [u.strip() for u in re.split(r"[,\n]", dbutils.widgets.get("urls")) if u.strip()]

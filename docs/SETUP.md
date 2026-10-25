@@ -69,7 +69,9 @@ La segunda orden es obligatoria: el notebook `01_ingest_tiktok.py` importa
 `ingest_lib.parse` desde su carpeta hermana en el workspace. Si falta, el run
 muere con `ModuleNotFoundError: No module named 'ingest_lib'`.
 
-Los jobs de `jobs/` esperan los notebooks en `/Users/<tu-usuario>/tiktok_ingest/`.
+Los jobs de `jobs/` traen la ruta con el placeholder `USUARIO`: sustituye
+`/Users/USUARIO/` por `/Users/<tu-usuario>/` (tu correo del workspace) antes de
+aplicarlos, o el `reset` fallará por ruta inexistente.
 Si los importas en otra ruta, edita el `notebook_path` del JSON del job antes de
 aplicarlo.
 
