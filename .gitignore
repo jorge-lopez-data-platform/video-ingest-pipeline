@@ -12,6 +12,9 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 
+# Payloads de job renderizados (llevan el usuario real del workspace)
+build/
+
 # Datos locales: videos, volcados y artefactos de ejecución
 *.mp4
 *.mov

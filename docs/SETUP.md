@@ -61,19 +61,32 @@ databricks secrets list-secrets tiktok_pipeline --profile <PERFIL>
 ## 4. Importar los notebooks
 
 ```bash
-databricks workspace import-dir notebooks /tiktok_ingest --profile <PERFIL>
-databricks workspace import-dir ingest_lib /tiktok_ingest/ingest_lib --profile <PERFIL>
+databricks workspace import-dir notebooks /Users/<tu-correo>/tiktok_ingest --profile <PERFIL>
+databricks workspace import-dir ingest_lib /Users/<tu-correo>/tiktok_ingest/ingest_lib --profile <PERFIL>
 ```
 
-La segunda orden es obligatoria: el notebook `01_ingest_tiktok.py` importa
-`ingest_lib.parse` desde su carpeta hermana en el workspace. Si falta, el run
-muere con `ModuleNotFoundError: No module named 'ingest_lib'`.
+La segunda orden es obligatoria: el notebook `01_ingest_tiktok.py` añade su propia
+carpeta al `sys.path` e importa `ingest_lib.parse` desde la carpeta hermana. Si
+falta, el run muere con `ModuleNotFoundError: No module named 'ingest_lib'`.
 
-Los jobs de `jobs/` traen la ruta con el placeholder `USUARIO`: sustituye
-`/Users/USUARIO/` por `/Users/<tu-usuario>/` (tu correo del workspace) antes de
-aplicarlos, o el `reset` fallará por ruta inexistente.
-Si los importas en otra ruta, edita el `notebook_path` del JSON del job antes de
-aplicarlo.
+La ruta debe coincidir con el `notebook_path` de los payloads de `jobs/`
+(`/Workspace/Users/<usuario>/tiktok_ingest/...`). Si importas en otra ruta, edita
+los JSON antes de renderizarlos, o los jobs fallarán al no encontrar el notebook.
+
+Los jobs de `jobs/` traen placeholders (`USUARIO`, `tu_cuenta`) para no versionar
+identificadores personales. Renderízalos a `build/jobs/` antes de aplicarlos; ese
+directorio está en `.gitignore`, así que tus datos no se publican:
+
+```bash
+python scripts/render_job_json.py \
+  --workspace-user <tu-correo-del-workspace> \
+  --own-handles <tus-cuentas,separadas,por,coma> \
+  --out-dir build/jobs
+```
+
+Si no los renderizas, `jobs reset` falla por ruta inexistente.
+Si importas los notebooks en otra ruta, edita el `notebook_path` del JSON antes de
+renderizarlo.
 
 ## 5. Crear los jobs
 
@@ -82,10 +95,10 @@ con `job_id` y `new_settings`.
 
 ```bash
 # Job diario de ingesta
-databricks jobs reset --json @jobs/ingest_daily.job.json --profile <PERFIL>
+databricks jobs reset --json @build/jobs/ingest_daily.job.json --profile <PERFIL>
 
 # Job que encadena ingesta + descarga de videos propios
-databricks jobs reset --json @jobs/download_own_video.job.json --profile <PERFIL>
+databricks jobs reset --json @build/jobs/download_own_video.job.json --profile <PERFIL>
 ```
 
 Si los ids no existen en tu workspace, `reset` falla. En ese caso crea el job con
@@ -118,9 +131,12 @@ La salida del notebook debe traer los conteos de bronze, silver, gold y
 
 ## Descarga de videos propios
 
-El job `tiktok_download_own_video` recibe `urls`, `own_handles` y `output_dir`.
-Solo descarga si el autor del video está en `own_handles`; el resto queda como
-`skipped`. Ajusta `own_handles` a tus cuentas antes de usarlo.
+El job `tiktok_download_own_video` recibe `urls`, `own_handles` y `output_dir`
+como parámetros de job; la tarea los pasa a los widgets del notebook con
+`{{job.parameters.<nombre>}}` y `base_parameters`. Solo descarga si el autor del
+video está en `own_handles`; el resto queda como `skipped` y, por diseño, el
+notebook falla al final si hubo URLs omitidas o con error. Ajusta `own_handles` a
+tus cuentas con `--own-handles` al renderizar el JSON.
 
 El job usa un entorno con `environment_version: 6` para poder instalar
 `yt-dlp` y `curl_cffi`. Si tu workspace no soporta entornos serverless, cámbialo

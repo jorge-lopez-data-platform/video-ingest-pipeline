@@ -95,7 +95,10 @@ Columnas: `video_id`, `created_at`, `text_language`, `is_ad`, `is_sponsored`,
 
 ### silver.videos
 
-Grano: **una fila por `video_id`**, el último snapshot por `ingested_at`.
+Grano: **una fila por `video_id`**, el último snapshot por `ingested_at`. El
+desempate es determinista: `ingested_at DESC, apify_run_id DESC` y, dentro de una
+misma ejecución, las métricas mayores, de modo que dos corridas sobre el mismo
+bronze producen exactamente la misma fila.
 
 Métricas derivadas:
 
@@ -140,6 +143,11 @@ notebook lanza excepción. Un job en verde con cero datos es peor que un fallo.
 **El job nace en pausa.** El actor es de pago por uso; activar el cron es una
 decisión explícita de coste, no un efecto colateral del despliegue.
 
+**El tope de gasto tiene dos capas.** El widget `max_charge_usd` viaja hasta
+`maxTotalChargeUsd`, pero el notebook rechaza cualquier valor por encima de
+`HARD_CHARGE_CAP_USD` (2 USD). Un `run-now` con parámetros equivocados no puede
+saltarse el presupuesto que declara el job.
+
 ## Idempotencia y recuperación
 
 - **Reejecutar la ingesta** no corrompe nada: añade otra tanda de observaciones y
@@ -156,7 +164,9 @@ decisión explícita de coste, no un efecto colateral del despliegue.
 
 El gasto lo determina el actor, facturado por resultados. El job fija
 `maxTotalChargeUsd` (`max_charge_usd`: 1.0 en el notebook, 2.0 en el job
-desplegado) y `results_per_hashtag` (50 en el notebook, 100 en el job).
+desplegado) y `results_per_hashtag` (50 en el notebook, 100 en el job). El
+notebook impone además un techo duro de 2.0 USD (`HARD_CHARGE_CAP_USD`) y falla
+antes de llamar a Apify si el parámetro lo supera.
 
 La combinación desplegada —5 hashtags × 100 resultados × tope de 2 USD por
 ejecución— con cron diario puede agotar el saldo del plan gratuito de Apify en

@@ -110,15 +110,18 @@ video-ingest-pipeline/
 │   ├── SETUP.md                    # alta del workspace, secrets, volumen, jobs
 │   └── TROUBLESHOOTING.md          # errores conocidos y solución
 ├── scripts/
-│   └── generate_original_video.sh  # video vertical original con ffmpeg
-├── tests/
+│   ├── generate_original_video.sh  # video vertical original con ffmpeg
+│   └── render_job_json.py          # resuelve placeholders de jobs/ a build/jobs/
+├── tests/                          # parseo y renderizado de payloads
 ├── requirements-dev.txt            # requests + pytest para desarrollo local
 └── .github/workflows/ci.yml        # compila notebooks y corre tests en cada push
 ```
 
 Los JSON de `jobs/` son payloads válidos de `databricks jobs reset` (formato
 `{"job_id", "new_settings"}`, sin campos de solo lectura). Contienen ids de job y
-rutas del workspace, ningún secreto.
+rutas del workspace, ningún secreto. Se versionan con los placeholders `USUARIO` y
+`tu_cuenta`; `scripts/render_job_json.py` los resuelve a `build/jobs/` (ignorado
+por Git) antes de aplicarlos.
 
 ## Requisitos
 
@@ -147,8 +150,9 @@ databricks secrets put-secret tiktok_pipeline apify_token --profile <PERFIL>
 # 4. Importa los notebooks al workspace
 databricks workspace import-dir notebooks /tiktok_ingest --profile <PERFIL>
 
-# 5. Crea o restaura el job
-databricks jobs reset --json @jobs/ingest_daily.job.json --profile <PERFIL>
+# 5. Renderiza los placeholders y crea o restaura el job
+python scripts/render_job_json.py --workspace-user <tu-correo> --out-dir build/jobs
+databricks jobs reset --json @build/jobs/ingest_daily.job.json --profile <PERFIL>
 ```
 
 ## Operación

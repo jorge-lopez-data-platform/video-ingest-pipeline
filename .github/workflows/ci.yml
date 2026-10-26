@@ -18,8 +18,12 @@ jobs:
       - name: Instalar dependencias
         run: pip install -r requirements-dev.txt
 
-      - name: Comprobar sintaxis de los notebooks
-        run: python -m compileall -q notebooks scripts
+      - name: Comprobar sintaxis de los notebooks y scripts
+        run: python -m compileall -q notebooks scripts ingest_lib
+
+      - name: Renderizar los payloads de job (valida JSON y placeholders)
+        run: python scripts/render_job_json.py --workspace-user ci@example.com --out-dir build/jobs
+
 
       - name: Tests
         run: pytest -q

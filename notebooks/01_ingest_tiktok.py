@@ -27,6 +27,19 @@ ACTOR = "clockworks~tiktok-scraper"
 API = "https://api.apify.com/v2"
 BRONZE = "tiktok.bronze.raw_videos"
 TERMINAL = {"SUCCEEDED", "FAILED", "ABORTED", "TIMED-OUT"}
+# Tope duro de gasto por ejecución. El widget no puede superarlo: el actor se
+# factura por resultados y un typo en el parámetro no debe multiplicar la factura.
+HARD_CHARGE_CAP_USD = 2.0
+
+if MAX_CHARGE_USD > HARD_CHARGE_CAP_USD:
+    raise ValueError(
+        f"max_charge_usd={MAX_CHARGE_USD} supera el tope duro "
+        f"({HARD_CHARGE_CAP_USD} USD) configurado en el notebook"
+    )
+print(
+    f"Coste maximo solicitado: {MAX_CHARGE_USD} USD "
+    f"({len(HASHTAGS)} hashtags x {RESULTS_PER_HASHTAG} resultados)"
+)
 
 token = dbutils.secrets.get("tiktok_pipeline", "apify_token")
 session = requests.Session()
@@ -153,7 +166,15 @@ SELECT
   CASE WHEN author_fans > 0 THEN play_count / author_fans END AS views_per_follower,
   DATEDIFF(CAST(ingested_at AS DATE), CAST(created_at AS DATE)) AS age_days
 FROM (
-  SELECT *, ROW_NUMBER() OVER (PARTITION BY video_id ORDER BY ingested_at DESC) AS rn
+  -- Desempate explicito: dos observaciones del mismo run comparten ingested_at,
+  -- y sin un segundo criterio el snapshot elegido no es determinista entre
+  -- ejecuciones. apify_run_id desempata; el resto de columnas lo hace estable
+  -- incluso dentro de una misma ejecucion.
+  SELECT *, ROW_NUMBER() OVER (
+    PARTITION BY video_id
+    ORDER BY ingested_at DESC, apify_run_id DESC,
+             play_count DESC, digg_count DESC
+  ) AS rn
   FROM tiktok.bronze.raw_videos
 )
 WHERE rn = 1
@@ -206,6 +227,9 @@ WITH fresh AS (
         + 0.15 * LOG10(digg_count + 1)
         + 0.15 * (engagement_rate * 100)) AS viral_score
   FROM tiktok.silver.videos
+  -- Solo se filtra lo que define el lote; las medianas se calculan sobre ese
+  -- conjunto y PERCENTILE ignora los NULL, de modo que cada ratio se compara
+  -- contra la mediana de los videos que si lo tienen.
   WHERE (text_language LIKE 'es%')
     AND created_at IS NOT NULL
     AND DATEDIFF(current_date(), CAST(created_at AS DATE)) <= 30
