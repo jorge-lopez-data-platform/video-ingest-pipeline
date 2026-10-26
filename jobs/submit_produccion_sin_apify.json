@@ -1,0 +1,70 @@
+{
+  "run_name": "produccion_sin_apify",
+  "tasks": [
+    {
+      "task_key": "generar_video",
+      "environment_key": "video",
+      "notebook_task": {
+        "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/generar_video_guion",
+        "base_parameters": {
+          "video_fuente_id": "",
+          "excluir_ids": "",
+          "cantidad": "1",
+          "voz": "es-MX-JorgeNeural",
+          "rate": "+8%",
+          "personaje": "motivacional",
+          "solo_sin_verificar": "false",
+          "dry_run": "false"
+        }
+      },
+      "timeout_seconds": 3600
+    },
+    {
+      "task_key": "subir_borradores",
+      "depends_on": [
+        {
+          "task_key": "generar_video"
+        }
+      ],
+      "for_each_task": {
+        "inputs": "{{tasks.generar_video.values.videos}}",
+        "task": {
+          "task_key": "subir_borrador",
+          "max_retries": 2,
+          "min_retry_interval_millis": 60000,
+          "environment_key": "publish",
+          "notebook_task": {
+            "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/upload_draft_video",
+            "base_parameters": {
+              "video_path": "{{input.video_name}}",
+              "own_videos": "{{input.video_name}}",
+              "allow_resubmit": "true",
+              "dry_run": "false"
+            }
+          },
+          "timeout_seconds": 1500
+        }
+      }
+    }
+  ],
+  "environments": [
+    {
+      "environment_key": "video",
+      "spec": {
+        "client": "3",
+        "dependencies": [
+          "pillow==10.3.0",
+          "edge-tts==7.3.1",
+          "imageio-ffmpeg",
+          "openai"
+        ]
+      }
+    },
+    {
+      "environment_key": "publish",
+      "spec": {
+        "client": "3"
+      }
+    }
+  ]
+}

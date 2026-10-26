@@ -1,0 +1,119 @@
+{
+ "creado": "20261025T071934Z",
+ "personaje": "motivacional",
+ "prefijo": "motivacional",
+ "sufijo": "",
+ "llm_model": "deepseek/deepseek-v4-pro-0813",
+ "audio": {
+  "voz": "es-MX-JorgeNeural",
+  "rate": "+8%",
+  "marca_usuario": "@alguienqueteescucha"
+ },
+ "videos": [
+  {
+   "video_fuente_id": "7690499505489333526",
+   "video_name": "motivacional_7690499505489333526.mp4",
+   "hashtags": "reflexiona,vidademotivacion,consejos,motivacion,reflexionesdelavida",
+   "titulo": "El poder oculto de dormir sin nadie al lado",
+   "spec": {
+    "piel": "#E9B58F",
+    "pelo_color": "#3E2A1E",
+    "pelo_estilo": "ondulado",
+    "ojos": "#3A2E24",
+    "ropa_tipo": "chaqueta",
+    "ropa_color": "#A64B3C",
+    "accesorio": "bufanda",
+    "expresion": "reflexiva",
+    "escenario": "noche",
+    "razon": "El guion habla de la paz en la oscuridad y de dormir sin miedo, así que un personaje sereno con bufanda en la noche transmite la compañía de la oscuridad sin dramatismo, reforzando el tono reflexivo y cálido del mensaje."
+   },
+   "guion": {
+    "video_fuente_id": "7690499505489333526",
+    "hook": "No temer dormir solo es un superpoder olvidado.",
+    "open_loop": "Al final te diré la palabra exacta que silencia el miedo en la oscuridad. No es una técnica, es algo mucho más simple.",
+    "bloque_1": "Apagar la luz y quedarte a solas con tu mente es el momento más honesto del día. No hay ruido que te distraiga, ni pantalla que te anestesie. Quien duerme sola no huye de ese silencio: lo observa sin miedo.",
+    "pattern_interrupt": "Pero ojo: no es soledad, es libertad.",
+    "bloque_2": "Mientras otros buscan compañía para escapar de sus pensamientos, esta persona se acuesta sin ruido. Sabe que su mente no es un enemigo, es un espacio donde puede mirar lo que siente sin juzgarlo. Dormir sola no es un vacío, es un acto de confianza.",
+    "pre_cierre": "La palabra exacta es: presente. La repite antes de dormir. No pide mañana, no arrastra ayer.",
+    "cierre": "La oscuridad no te abandona: te acompaña. Dormir solo es un acto radical de paz.",
+    "cta": "Esta noche apaga el teléfono y di presente.",
+    "hashtags": "#motivacion,#inspiration,#reflexion,#exito,#superacion,#amorpropio",
+    "datos_a_verificar": "",
+    "confianza": "alta",
+    "palabras_reales": 162,
+    "duracion_estimada": 60.0,
+    "texto_pantalla_1": "No temer dormir solo es un superpoder"
+   }
+  },
+  {
+   "video_fuente_id": "7697941394140286229",
+   "video_name": "motivacional_7697941394140286229.mp4",
+   "hashtags": "parati,vidaconproposito,viral,momentosdevida,frasesmotivadoras",
+   "titulo": "El mapa viejo que te está frenando",
+   "spec": {
+    "piel": "#E0A870",
+    "pelo_color": "#1E1914",
+    "pelo_estilo": "coleta",
+    "ojos": "#3A2E24",
+    "ropa_tipo": "camisa",
+    "ropa_color": "#3B5E8C",
+    "accesorio": "gafas",
+    "expresion": "reflexiva",
+    "escenario": "abstracto",
+    "razon": "Un personaje sereno con gafas en un fondo neutro transmite introspección y análisis, encajando con el tono crítico del guion sobre sueños que limitan."
+   },
+   "guion": {
+    "video_fuente_id": "7697941394140286229",
+    "hook": "Tu sueño puede ser tu cárcel.",
+    "open_loop": "Y al final te revelo la pregunta exacta que separa a los que sueñan de los que lo logran.",
+    "bloque_1": "Desde niño te dijeron que persiguieras tu sueño. Pero nadie te dijo que un sueño fijo también puede volverse un techo. Si te aferras a una imagen de éxito que tenías a los quince, estás usando un mapa viejo para un territorio nuevo. El problema no es soñar. Es soñar pequeño y llamarlo destino.",
+    "pattern_interrupt": "Detente un segundo.",
+    "bloque_2": "La gente no fracasa por falta de talento. Fracasa porque confunde lealtad a un sueño con lealtad a sí misma. Tu sueño de hoy no tiene que ser tu sueño de mañana. Evolucionar no es traicionar. Es madurar. Los grandes logros rara vez se parecen al plan original.",
+    "pre_cierre": "La pregunta exacta es: ¿este sueño me está haciendo más libre o más pequeño?",
+    "cierre": "Persigue lo que te expande, no lo que te encierra.",
+    "cta": "Guarda este video para cuando tu sueño te quede chico.",
+    "hashtags": "#desarrollopersonal,#inspiracion,#exito,#motivacion,#sueños,#mentalidad",
+    "datos_a_verificar": "",
+    "confianza": "alta",
+    "palabras_reales": 164,
+    "duracion_estimada": 60.7,
+    "texto_pantalla_1": "Tu sueño puede ser tu cárcel"
+   }
+  },
+  {
+   "video_fuente_id": "7692489238465580289",
+   "video_name": "motivacional_7692489238465580289.mp4",
+   "hashtags": "motivacional,leccionesdevida,inspiraciondiaria,parati_viral,vidareal",
+   "titulo": "Lo que pesa de verdad cuando miras atrás",
+   "spec": {
+    "piel": "#C88A5A",
+    "pelo_color": "#1C1814",
+    "pelo_estilo": "rapado",
+    "ojos": "#3A2E24",
+    "ropa_tipo": "sudadera",
+    "ropa_color": "#3B4A5A",
+    "accesorio": "ninguno",
+    "expresion": "decidida",
+    "escenario": "gimnasio",
+    "razon": "El guion habla de disciplina, entrenar la mentalidad y hacer lo que no quieres hacer; un personaje con expresión decidida y sudadera en un gimnasio transmite esfuerzo constante y autoridad práctica."
+   },
+   "guion": {
+    "video_fuente_id": "7692489238465580289",
+    "hook": "Nadie te va a salvar. Y esa es tu mayor ventaja.",
+    "open_loop": "Hay una frase que separa a los que avanzan de los que se quedan. La digo al final.",
+    "bloque_1": "La motivación se acaba. La disciplina no. Cada mañana te enfrentas a la misma decisión: moverte o quedarte quieto. El crecimiento personal no es un video bonito, es hacer lo que no quieres hacer cuando nadie te está mirando. Los días grises también cuentan.",
+    "pattern_interrupt": "Pero hay algo más duro que el fracaso.",
+    "bloque_2": "Es mirar atrás y darte cuenta de que no lo intentaste. Que dejaste que el miedo hablara más fuerte que tus ganas. La mentalidad no se hereda, se entrena. Cada pequeña acción que tomas hoy es un voto a favor de la persona que quieres ser mañana.",
+    "pre_cierre": "La frase es: 'El dolor de la disciplina pesa gramos, el del arrepentimiento pesa toneladas.'",
+    "cierre": "No esperes el momento perfecto. Construye una mentalidad que no dependa de cómo te sientas.",
+    "cta": "Guarda este video para cuando quieras rendirte.",
+    "hashtags": "motivacion,reflexion,crecimientopersonal,mentalidad,desarrollopersonal,hopecore",
+    "datos_a_verificar": "",
+    "confianza": "alta",
+    "palabras_reales": 165,
+    "duracion_estimada": 61.1,
+    "texto_pantalla_1": "Nadie te va a salvar"
+   }
+  }
+ ]
+}

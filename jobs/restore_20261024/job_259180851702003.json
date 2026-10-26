@@ -1,0 +1,58 @@
+{
+  "job_id": 259180851702003,
+  "new_settings": {
+    "email_notifications": {},
+    "max_concurrent_runs": 1,
+    "name": "tiktok_viral_pipeline",
+    "queue": {
+      "enabled": true
+    },
+    "tasks": [
+      {
+        "disabled": false,
+        "email_notifications": {},
+        "notebook_task": {
+          "notebook_path": "/tiktok_pipeline/01_scrape_viral_videos",
+          "source": "WORKSPACE"
+        },
+        "run_if": "ALL_SUCCESS",
+        "task_key": "scrape_viral_videos",
+        "timeout_seconds": 0
+      },
+      {
+        "depends_on": [
+          {
+            "task_key": "scrape_viral_videos"
+          }
+        ],
+        "disabled": false,
+        "email_notifications": {},
+        "notebook_task": {
+          "notebook_path": "/tiktok_pipeline/02_download_video",
+          "source": "WORKSPACE"
+        },
+        "run_if": "ALL_SUCCESS",
+        "task_key": "download_video",
+        "timeout_seconds": 0
+      },
+      {
+        "depends_on": [
+          {
+            "task_key": "download_video"
+          }
+        ],
+        "disabled": false,
+        "email_notifications": {},
+        "notebook_task": {
+          "notebook_path": "/tiktok_pipeline/03_upload_to_tiktok",
+          "source": "WORKSPACE"
+        },
+        "run_if": "ALL_SUCCESS",
+        "task_key": "upload_to_tiktok",
+        "timeout_seconds": 0
+      }
+    ],
+    "timeout_seconds": 0,
+    "webhook_notifications": {}
+  }
+}

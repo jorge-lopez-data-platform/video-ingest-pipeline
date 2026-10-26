@@ -1,0 +1,217 @@
+{
+  "job_id": 813880207704409,
+  "new_settings": {
+    "name": "tiktok_produccion_diaria",
+    "description": "Produccion diaria de TikTok: guiones virales (opcionalmente con Apify), video animado con subtitulos y envio al inbox como borrador. La cantidad y la tematica se eligen con los parametros `cantidad` y `hashtags`. Publicacion directa deshabilitada: la app no esta auditada por TikTok.",
+    "max_concurrent_runs": 1,
+    "queue": {
+      "enabled": true
+    },
+    "tags": {
+      "project": "tiktok",
+      "stage": "production",
+      "content": "own"
+    },
+    "schedule": {
+      "quartz_cron_expression": "0 0 9 * * ?",
+      "timezone_id": "UTC",
+      "pause_status": "PAUSED"
+    },
+    "webhook_notifications": {
+      "on_duration_warning_threshold_exceeded": [
+        { "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8" }
+      ]
+    },
+    "parameters": [
+      {
+        "name": "cantidad",
+        "default": "3"
+      },
+      {
+        "name": "hashtags",
+        "default": "motivacional,desarrollopersonal,motivacion,fyp,viral"
+      },
+      {
+        "name": "usar_apify",
+        "default": "true"
+      },
+      {
+        "name": "results_per_hashtag",
+        "default": "20"
+      },
+      {
+        "name": "max_charge_usd",
+        "default": "0.5"
+      },
+      {
+        "name": "top_n",
+        "default": "30"
+      },
+      {
+        "name": "min_likes",
+        "default": "20000"
+      },
+      {
+        "name": "video_fuente_id",
+        "default": ""
+      },
+      {
+        "name": "excluir_ids",
+        "default": ""
+      },
+      {
+        "name": "voz",
+        "default": "es-MX-JorgeNeural"
+      },
+      {
+        "name": "personaje",
+        "default": "motivacional"
+      },
+      {
+        "name": "rate",
+        "default": "+8%"
+      },
+      {
+        "name": "allow_resubmit",
+        "default": "true"
+      },
+      {
+        "name": "max_pendientes",
+        "default": "3"
+      },
+      {
+        "name": "n_hashtags",
+        "default": "5"
+      },
+      {
+        "name": "marca_usuario",
+        "default": "@alguienqueteescucha"
+      }
+    ],
+    "environments": [
+      {
+        "environment_key": "video",
+        "spec": {
+          "client": "3",
+          "dependencies": [
+            "pillow==10.3.0",
+            "edge-tts==7.3.1",
+            "imageio-ffmpeg",
+            "openai"
+          ]
+        }
+      },
+      {
+        "environment_key": "publish",
+        "spec": {
+          "client": "3"
+        }
+      }
+    ],
+    "tasks": [
+      {
+        "task_key": "guiones_60s",
+        "notebook_task": {
+          "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/guiones_60s_viral",
+          "base_parameters": {
+            "hashtags": "{{job.parameters.hashtags}}",
+            "usar_apify": "{{job.parameters.usar_apify}}",
+            "results_per_hashtag": "{{job.parameters.results_per_hashtag}}",
+            "max_charge_usd": "{{job.parameters.max_charge_usd}}",
+            "top_n": "{{job.parameters.top_n}}",
+            "min_likes": "{{job.parameters.min_likes}}",
+            "llm_model": "deepseek/deepseek-v4-pro-0813",
+            "max_age_days": "30",
+            "max_duration_sec": "60",
+            "min_plays": "10000"
+          }
+        },
+        "webhook_notifications": {
+          "on_start": [{ "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8" }],
+          "on_success": [{ "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8" }],
+          "on_failure": [{ "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8" }]
+        },
+        "timeout_seconds": 3600
+      },
+      {
+        "task_key": "generar_video",
+        "depends_on": [
+          {
+            "task_key": "guiones_60s"
+          }
+        ],
+        "environment_key": "video",
+        "notebook_task": {
+          "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/generar_video_guion",
+          "base_parameters": {
+            "cantidad": "{{job.parameters.cantidad}}",
+            "video_fuente_id": "{{job.parameters.video_fuente_id}}",
+            "excluir_ids": "{{job.parameters.excluir_ids}}",
+            "voz": "{{job.parameters.voz}}",
+            "rate": "{{job.parameters.rate}}",
+            "personaje": "{{job.parameters.personaje}}",
+            "temas_hashtags": "{{job.parameters.hashtags}}",
+            "n_hashtags": "{{job.parameters.n_hashtags}}",
+            "marca_usuario": "{{job.parameters.marca_usuario}}",
+            "dry_run": "false"
+          }
+        },
+        "webhook_notifications": {
+          "on_start": [{ "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8" }],
+          "on_success": [{ "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8" }],
+          "on_failure": [{ "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8" }]
+        },
+        "timeout_seconds": 7200
+      },
+      {
+        "task_key": "subir_borradores",
+        "depends_on": [
+          {
+            "task_key": "generar_video"
+          }
+        ],
+        "for_each_task": {
+          "inputs": "{{tasks.generar_video.values.videos}}",
+          "task": {
+            "task_key": "subir_borrador",
+            "max_retries": 3,
+            "min_retry_interval_millis": 120000,
+            "environment_key": "publish",
+            "notebook_task": {
+              "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/upload_draft_video",
+              "base_parameters": {
+                "video_path": "{{input.video_name}}",
+                "own_videos": "{{input.video_name}}",
+                "allow_resubmit": "{{job.parameters.allow_resubmit}}",
+                "dry_run": "false"
+              }
+            },
+            "timeout_seconds": 1500
+          }
+        },
+        "webhook_notifications": {
+          "on_start": [{ "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8" }],
+          "on_success": [{ "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8" }],
+          "on_failure": [{ "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8" }]
+        }
+      },
+      {
+        "task_key": "listar_pendientes",
+        "depends_on": [
+          {
+            "task_key": "subir_borradores"
+          }
+        ],
+        "environment_key": "publish",
+        "notebook_task": {
+          "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/pendientes_borradores",
+          "base_parameters": {
+            "max_pendientes": "{{job.parameters.max_pendientes}}"
+          }
+        },
+        "run_if": "ALL_DONE",
+        "timeout_seconds": 900
+      }
+    ]
+  }
+}

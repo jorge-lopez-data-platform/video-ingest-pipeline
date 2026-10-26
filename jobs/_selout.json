@@ -1,0 +1,179 @@
+{
+  "metadata": {
+    "job_id": 813880207704409,
+    "run_id": 924401763445443,
+    "creator_user_name": "lopezechagarayjorge@gmail.com",
+    "number_in_job": 924401763445443,
+    "original_attempt_run_id": 924401763445443,
+    "state": {
+      "life_cycle_state": "TERMINATED",
+      "result_state": "SUCCESS",
+      "state_message": "",
+      "user_cancelled_or_timedout": false
+    },
+    "job_parameters": [
+      {
+        "name": "cantidad",
+        "default": "1",
+        "value": "3"
+      },
+      {
+        "name": "hashtags",
+        "default": "motivacional,desarrollopersonal,motivacion,fyp,viral"
+      },
+      {
+        "name": "usar_apify",
+        "default": "true"
+      },
+      {
+        "name": "results_per_hashtag",
+        "default": "20"
+      },
+      {
+        "name": "max_charge_usd",
+        "default": "0.5"
+      },
+      {
+        "name": "top_n",
+        "default": "30"
+      },
+      {
+        "name": "min_likes",
+        "default": "20000"
+      },
+      {
+        "name": "video_fuente_id",
+        "default": ""
+      },
+      {
+        "name": "excluir_ids",
+        "default": ""
+      },
+      {
+        "name": "voz",
+        "default": "es-MX-JorgeNeural"
+      },
+      {
+        "name": "personaje",
+        "default": "motivacional"
+      },
+      {
+        "name": "rate",
+        "default": "+8%"
+      },
+      {
+        "name": "allow_resubmit",
+        "default": "false"
+      },
+      {
+        "name": "max_pendientes",
+        "default": "1"
+      },
+      {
+        "name": "n_hashtags",
+        "default": "5"
+      },
+      {
+        "name": "marca_usuario",
+        "default": "@alguienqueteescucha"
+      },
+      {
+        "name": "llm_model",
+        "default": "deepseek/deepseek-v4-pro-0813"
+      },
+      {
+        "name": "regenerar_ids",
+        "default": ""
+      },
+      {
+        "name": "desde_historial",
+        "default": "false"
+      },
+      {
+        "name": "reusar_personaje",
+        "default": "false"
+      },
+      {
+        "name": "sufijo",
+        "default": ""
+      },
+      {
+        "name": "dry_run",
+        "default": "false"
+      }
+    ],
+    "start_time": 1792912685697,
+    "setup_duration": 3000,
+    "execution_duration": 91000,
+    "cleanup_duration": 0,
+    "end_time": 1792912780142,
+    "trigger": "ONE_TIME",
+    "run_name": "seleccionar_guiones",
+    "run_page_url": "https://dbc-e83fc5f3-f80b.cloud.databricks.com/?o=7474644109457991#job/813880207704409/run/924401763445443",
+    "run_type": "JOB_RUN",
+    "parent_run_id": 344639676640537,
+    "tasks": [
+      {
+        "run_id": 924401763445443,
+        "task_key": "seleccionar_guiones",
+        "notebook_task": {
+          "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/seleccionar_guiones",
+          "base_parameters": {
+            "cantidad": "{{job.parameters.cantidad}}",
+            "desde_historial": "{{job.parameters.desde_historial}}",
+            "excluir_ids": "{{job.parameters.excluir_ids}}",
+            "llm_model": "{{job.parameters.llm_model}}",
+            "marca_usuario": "{{job.parameters.marca_usuario}}",
+            "n_hashtags": "{{job.parameters.n_hashtags}}",
+            "personaje": "{{job.parameters.personaje}}",
+            "rate": "{{job.parameters.rate}}",
+            "regenerar_ids": "{{job.parameters.regenerar_ids}}",
+            "reusar_personaje": "{{job.parameters.reusar_personaje}}",
+            "sufijo": "{{job.parameters.sufijo}}",
+            "temas_hashtags": "{{job.parameters.hashtags}}",
+            "video_fuente_id": "{{job.parameters.video_fuente_id}}",
+            "voz": "{{job.parameters.voz}}"
+          },
+          "source": "WORKSPACE"
+        },
+        "environment_key": "video",
+        "state": {
+          "life_cycle_state": "TERMINATED",
+          "result_state": "SUCCESS",
+          "state_message": "",
+          "user_cancelled_or_timedout": false
+        },
+        "run_page_url": "https://dbc-e83fc5f3-f80b.cloud.databricks.com/?o=7474644109457991#job/813880207704409/run/924401763445443",
+        "start_time": 1792912685697,
+        "setup_duration": 3000,
+        "execution_duration": 91000,
+        "cleanup_duration": 0,
+        "end_time": 1792912780142,
+        "attempt_number": 0,
+        "status": {
+          "state": "TERMINATED",
+          "termination_details": {
+            "code": "SUCCESS",
+            "type": "SUCCESS",
+            "message": ""
+          }
+        },
+        "effective_performance_target": "PERFORMANCE_OPTIMIZED"
+      }
+    ],
+    "task_key": "seleccionar_guiones",
+    "description": "Fase serial: elige los guiones, disena las fichas del personaje y sortea los hashtags UNA vez para todo el lote, y deja el manifiesto que consume el for_each. Todo lo que depende del lote entero vive aqui porque dentro de N iteraciones aisladas no se puede mantener.",
+    "format": "MULTI_TASK",
+    "status": {
+      "state": "TERMINATED",
+      "termination_details": {
+        "code": "SUCCESS",
+        "type": "SUCCESS",
+        "message": ""
+      }
+    },
+    "job_run_id": 344639676640537,
+    "effective_performance_target": "PERFORMANCE_OPTIMIZED"
+  },
+  "notebook_output": {}
+}

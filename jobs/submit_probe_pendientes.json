@@ -1,0 +1,21 @@
+{
+  "run_name": "probe_pendientes",
+  "tasks": [
+    {
+      "task_key": "pendientes",
+      "environment_key": "default",
+      "notebook_task": {
+        "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/pendientes_borradores"
+      },
+      "timeout_seconds": 900
+    }
+  ],
+  "environments": [
+    {
+      "environment_key": "default",
+      "spec": {
+        "client": "3"
+      }
+    }
+  ]
+}

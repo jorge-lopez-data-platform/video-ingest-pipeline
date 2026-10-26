@@ -1,0 +1,76 @@
+{
+  "job_id": 349008211136613,
+  "new_settings": {
+    "name": "tiktok_download_own_video",
+    "max_concurrent_runs": 1,
+    "performance_target": "PERFORMANCE_OPTIMIZED",
+    "queue": {
+      "enabled": true
+    },
+    "timeout_seconds": 0,
+    "parameters": [
+      {
+        "default": "",
+        "name": "urls"
+      },
+      {
+        "default": "lomasviral",
+        "name": "own_handles"
+      },
+      {
+        "default": "/Volumes/tiktok/default/videos/own",
+        "name": "output_dir"
+      }
+    ],
+    "environments": [
+      {
+        "environment_key": "default",
+        "spec": {
+          "client": "1"
+        }
+      },
+      {
+        "environment_key": "download_own_video_environment",
+        "spec": {
+          "environment_version": "6"
+        }
+      }
+    ],
+    "tasks": [
+      {
+        "disabled": false,
+        "email_notifications": {},
+        "run_if": "ALL_SUCCESS",
+        "run_job_task": {
+          "job_id": 584295967848266
+        },
+        "task_key": "ingest_tiktok",
+        "timeout_seconds": 0,
+        "webhook_notifications": {}
+      },
+      {
+        "depends_on": [
+          {
+            "task_key": "ingest_tiktok"
+          }
+        ],
+        "disabled": false,
+        "email_notifications": {},
+        "environment_key": "download_own_video_environment",
+        "notebook_task": {
+          "notebook_path": "/Workspace/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/download_own_video",
+          "source": "WORKSPACE"
+        },
+        "run_if": "ALL_SUCCESS",
+        "task_key": "download_own_video",
+        "timeout_seconds": 0,
+        "webhook_notifications": {}
+      }
+    ],
+    "email_notifications": {
+      "no_alert_for_skipped_runs": false
+    },
+    "format": "MULTI_TASK",
+    "webhook_notifications": {}
+  }
+}

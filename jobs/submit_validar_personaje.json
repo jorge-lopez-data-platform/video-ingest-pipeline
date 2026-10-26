@@ -1,0 +1,32 @@
+{
+  "run_name": "validar_personaje_llm",
+  "tasks": [
+    {
+      "task_key": "gen",
+      "notebook_task": {
+        "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/generar_video_guion",
+        "base_parameters": {
+          "cantidad": "1",
+          "solo_sin_verificar": "false",
+          "personaje": "motivacional"
+        }
+      },
+      "environment_key": "video",
+      "timeout_seconds": 3600
+    }
+  ],
+  "environments": [
+    {
+      "environment_key": "video",
+      "spec": {
+        "client": "3",
+        "dependencies": [
+          "pillow==10.3.0",
+          "edge-tts==7.3.1",
+          "imageio-ffmpeg",
+          "openai"
+        ]
+      }
+    }
+  ]
+}

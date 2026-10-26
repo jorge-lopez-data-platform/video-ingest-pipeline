@@ -1,0 +1,126 @@
+{
+  "cleanup_duration": 0,
+  "creator_user_name": "lopezechagarayjorge@gmail.com",
+  "effective_performance_target": "PERFORMANCE_OPTIMIZED",
+  "end_time": 1792915221442,
+  "execution_duration": 0,
+  "job_id": 606029327014796,
+  "job_parameters": [
+    {
+      "default": "",
+      "name": "video_fuente_id"
+    }
+  ],
+  "job_run_id": 1052412082722755,
+  "number_in_job": 1052412082722755,
+  "original_attempt_run_id": 1052412082722755,
+  "run_duration": 34807,
+  "run_id": 1052412082722755,
+  "run_name": "prueba_param",
+  "run_page_url": "https://dbc-e83fc5f3-f80b.cloud.databricks.com/?o=7474644109457991#job/606029327014796/run/1052412082722755",
+  "run_type": "JOB_RUN",
+  "setup_duration": 0,
+  "start_time": 1792915186635,
+  "state": {
+    "life_cycle_state": "TERMINATED",
+    "result_state": "SUCCESS",
+    "state_message": "",
+    "user_cancelled_or_timedout": false
+  },
+  "status": {
+    "state": "TERMINATED",
+    "termination_details": {
+      "code": "SUCCESS",
+      "message": "",
+      "type": "SUCCESS"
+    }
+  },
+  "tasks": [
+    {
+      "attempt_number": 0,
+      "cleanup_duration": 0,
+      "depends_on": [
+        {
+          "task_key": "publica"
+        }
+      ],
+      "effective_performance_target": "PERFORMANCE_OPTIMIZED",
+      "end_time": 1792915220854,
+      "execution_duration": 18000,
+      "for_each_task": {
+        "inputs": "{{tasks.publica.values.lista}}",
+        "stats": {
+          "task_run_stats": {
+            "active_iterations": 0,
+            "completed_iterations": 2,
+            "failed_iterations": 0,
+            "scheduled_iterations": 2,
+            "succeeded_iterations": 2,
+            "total_iterations": 2
+          }
+        },
+        "task": {
+          "notebook_task": {
+            "base_parameters": {
+              "valor": "{{input}}"
+            },
+            "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/_tmp/_eco"
+          },
+          "task_key": "eco_hijo"
+        }
+      },
+      "run_id": 828568721100171,
+      "run_if": "ALL_SUCCESS",
+      "run_page_url": "https://dbc-e83fc5f3-f80b.cloud.databricks.com/?o=7474644109457991#job/606029327014796/run/828568721100171",
+      "setup_duration": 0,
+      "start_time": 1792915202537,
+      "state": {
+        "life_cycle_state": "TERMINATED",
+        "result_state": "SUCCESS",
+        "state_message": "",
+        "user_cancelled_or_timedout": false
+      },
+      "status": {
+        "state": "TERMINATED",
+        "termination_details": {
+          "code": "SUCCESS",
+          "message": "",
+          "type": "SUCCESS"
+        }
+      },
+      "task_key": "consume"
+    },
+    {
+      "attempt_number": 0,
+      "cleanup_duration": 0,
+      "effective_performance_target": "PERFORMANCE_OPTIMIZED",
+      "end_time": 1792915202138,
+      "execution_duration": 12000,
+      "notebook_task": {
+        "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/_tmp/_eco_pub",
+        "source": "WORKSPACE"
+      },
+      "run_id": 1049668487256534,
+      "run_if": "ALL_SUCCESS",
+      "run_page_url": "https://dbc-e83fc5f3-f80b.cloud.databricks.com/?o=7474644109457991#job/606029327014796/run/1049668487256534",
+      "setup_duration": 3000,
+      "start_time": 1792915186666,
+      "state": {
+        "life_cycle_state": "TERMINATED",
+        "result_state": "SUCCESS",
+        "state_message": "",
+        "user_cancelled_or_timedout": false
+      },
+      "status": {
+        "state": "TERMINATED",
+        "termination_details": {
+          "code": "SUCCESS",
+          "message": "",
+          "type": "SUCCESS"
+        }
+      },
+      "task_key": "publica"
+    }
+  ],
+  "trigger": "ONE_TIME"
+}

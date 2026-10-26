@@ -1,0 +1,24 @@
+{
+  "name": "tiktok_ingest_daily",
+  "max_concurrent_runs": 1,
+  "timeout_seconds": 3600,
+  "schedule": {
+    "quartz_cron_expression": "0 0 6 * * ?",
+    "timezone_id": "UTC",
+    "pause_status": "PAUSED"
+  },
+  "tasks": [
+    {
+      "task_key": "ingest_tiktok",
+      "notebook_task": {
+        "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/ingest_tiktok",
+        "base_parameters": {
+          "hashtags": "databricks,dataengineering,datascience,sql,bigdata",
+          "results_per_hashtag": "100",
+          "max_charge_usd": "2.0",
+          "run_timeout_secs": "900"
+        }
+      }
+    }
+  ]
+}

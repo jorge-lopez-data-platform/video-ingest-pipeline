@@ -1,0 +1,85 @@
+{
+  "job_id": 294643041593670,
+  "new_settings": {
+    "description": "Sends one of the owner's own videos to the TikTok inbox as a draft (inbox upload endpoint, video.upload scope only). The owner publishes it from the app.",
+    "email_notifications": {
+      "no_alert_for_skipped_runs": true,
+      "on_duration_warning_threshold_exceeded": [
+        "lopezechagarayjorge@gmail.com"
+      ],
+      "on_failure": [
+        "lopezechagarayjorge@gmail.com"
+      ]
+    },
+    "environments": [
+      {
+        "environment_key": "default",
+        "spec": {
+          "client": "2"
+        }
+      }
+    ],
+    "health": {
+      "rules": [
+        {
+          "metric": "RUN_DURATION_SECONDS",
+          "op": "GREATER_THAN",
+          "value": 900
+        }
+      ]
+    },
+    "max_concurrent_runs": 1,
+    "name": "tiktok_jesucitos_draft",
+    "parameters": [
+      {
+        "default": "jesucitos_paraiso.mp4",
+        "name": "video_path"
+      },
+      {
+        "default": "jesucitos_paraiso.mp4,video_amorpropio.mp4,7270127155529452843.mp4",
+        "name": "own_videos"
+      },
+      {
+        "default": "false",
+        "name": "dry_run"
+      },
+      {
+        "default": "false",
+        "name": "allow_resubmit"
+      }
+    ],
+    "queue": {
+      "enabled": true
+    },
+    "tags": {
+      "content": "own",
+      "project": "tiktok",
+      "stage": "publish"
+    },
+    "tasks": [
+      {
+        "disabled": false,
+        "email_notifications": {},
+        "environment_key": "default",
+        "max_retries": 2,
+        "min_retry_interval_millis": 60000,
+        "notebook_task": {
+          "base_parameters": {
+            "allow_resubmit": "{{job.parameters.allow_resubmit}}",
+            "dry_run": "{{job.parameters.dry_run}}",
+            "own_videos": "{{job.parameters.own_videos}}",
+            "video_path": "{{job.parameters.video_path}}"
+          },
+          "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/upload_draft_video",
+          "source": "WORKSPACE"
+        },
+        "retry_on_timeout": false,
+        "run_if": "ALL_SUCCESS",
+        "task_key": "upload_draft",
+        "timeout_seconds": 1500
+      }
+    ],
+    "timeout_seconds": 1800,
+    "webhook_notifications": {}
+  }
+}

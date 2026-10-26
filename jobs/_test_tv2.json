@@ -1,0 +1,53 @@
+{
+ "run_name": "test_input_formas",
+ "tasks": [
+  {
+   "task_key": "publica",
+   "notebook_task": {
+    "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/_tmp/_tmp_tv_set"
+   }
+  },
+  {
+   "task_key": "por_clave",
+   "depends_on": [
+    {
+     "task_key": "publica"
+    }
+   ],
+   "for_each_task": {
+    "inputs": "{{tasks.publica.values.ids}}",
+    "concurrency": 2,
+    "task": {
+     "task_key": "item_clave",
+     "notebook_task": {
+      "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/_tmp/_tmp_tv_get",
+      "base_parameters": {
+       "video_fuente_id": "{{input.video_fuente_id}}"
+      }
+     }
+    }
+   }
+  },
+  {
+   "task_key": "plano",
+   "depends_on": [
+    {
+     "task_key": "publica"
+    }
+   ],
+   "for_each_task": {
+    "inputs": "{{tasks.publica.values.ids_planos}}",
+    "concurrency": 2,
+    "task": {
+     "task_key": "item_plano",
+     "notebook_task": {
+      "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/_tmp/_tmp_tv_get",
+      "base_parameters": {
+       "video_fuente_id": "{{input}}"
+      }
+     }
+    }
+   }
+  }
+ ]
+}

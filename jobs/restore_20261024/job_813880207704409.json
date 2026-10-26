@@ -1,0 +1,174 @@
+{
+  "job_id": 813880207704409,
+  "new_settings": {
+    "description": "Genera guiones virales, produce el video animado con subtitulos y lo envia al inbox de TikTok como borrador. El guion se verifica antes de publicar: los que traen datos_a_verificar se descartan.",
+    "email_notifications": {},
+    "environments": [
+      {
+        "environment_key": "publish",
+        "spec": {
+          "client": "3"
+        }
+      },
+      {
+        "environment_key": "video",
+        "spec": {
+          "client": "3",
+          "dependencies": [
+            "pillow==10.3.0",
+            "edge-tts==7.3.1",
+            "imageio-ffmpeg"
+          ]
+        }
+      }
+    ],
+    "max_concurrent_runs": 1,
+    "name": "tiktok_guion_video_draft",
+    "parameters": [
+      {
+        "default": "motivacional,desarrollopersonal,motivacion,fyp,viral",
+        "name": "hashtags"
+      },
+      {
+        "default": "6",
+        "name": "results_per_hashtag"
+      },
+      {
+        "default": "0.5",
+        "name": "max_charge_usd"
+      },
+      {
+        "default": "30",
+        "name": "top_n"
+      },
+      {
+        "default": "20000",
+        "name": "min_likes"
+      },
+      {
+        "default": "3",
+        "name": "cantidad"
+      },
+      {
+        "default": "",
+        "name": "video_fuente_id"
+      },
+      {
+        "default": "",
+        "name": "excluir_ids"
+      },
+      {
+        "default": "es-MX-JorgeNeural",
+        "name": "voz"
+      },
+      {
+        "default": "motivacional",
+        "name": "personaje"
+      },
+      {
+        "default": "+8%",
+        "name": "rate"
+      },
+      {
+        "default": "true",
+        "name": "allow_resubmit"
+      }
+    ],
+    "queue": {
+      "enabled": true
+    },
+    "tags": {
+      "content": "own",
+      "project": "tiktok",
+      "stage": "pipeline"
+    },
+    "tasks": [
+      {
+        "disabled": false,
+        "email_notifications": {},
+        "notebook_task": {
+          "base_parameters": {
+            "hashtags": "{{job.parameters.hashtags}}",
+            "llm_model": "deepseek/deepseek-v4-pro-0813",
+            "max_age_days": "30",
+            "max_charge_usd": "{{job.parameters.max_charge_usd}}",
+            "max_duration_sec": "60",
+            "min_likes": "{{job.parameters.min_likes}}",
+            "min_plays": "10000",
+            "results_per_hashtag": "{{job.parameters.results_per_hashtag}}",
+            "top_n": "{{job.parameters.top_n}}"
+          },
+          "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/guiones_60s_viral",
+          "source": "WORKSPACE"
+        },
+        "run_if": "ALL_SUCCESS",
+        "task_key": "guiones_60s",
+        "timeout_seconds": 3600
+      },
+      {
+        "depends_on": [
+          {
+            "task_key": "guiones_60s"
+          }
+        ],
+        "disabled": false,
+        "email_notifications": {},
+        "environment_key": "video",
+        "notebook_task": {
+          "base_parameters": {
+            "cantidad": "{{job.parameters.cantidad}}",
+            "dry_run": "false",
+            "excluir_ids": "{{job.parameters.excluir_ids}}",
+            "personaje": "{{job.parameters.personaje}}",
+            "rate": "{{job.parameters.rate}}",
+            "video_fuente_id": "{{job.parameters.video_fuente_id}}",
+            "voz": "{{job.parameters.voz}}"
+          },
+          "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/generar_video_guion",
+          "source": "WORKSPACE"
+        },
+        "run_if": "ALL_SUCCESS",
+        "task_key": "generar_video",
+        "timeout_seconds": 3600
+      },
+      {
+        "depends_on": [
+          {
+            "task_key": "generar_video"
+          }
+        ],
+        "disabled": false,
+        "email_notifications": {},
+        "for_each_task": {
+          "inputs": "{{tasks.generar_video.values.videos}}",
+          "task": {
+            "disabled": false,
+            "email_notifications": {},
+            "environment_key": "publish",
+            "max_retries": 2,
+            "min_retry_interval_millis": 60000,
+            "notebook_task": {
+              "base_parameters": {
+                "allow_resubmit": "{{job.parameters.allow_resubmit}}",
+                "dry_run": "false",
+                "own_videos": "{{input.video_name}}",
+                "video_path": "{{input.video_name}}"
+              },
+              "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/upload_draft_video",
+              "source": "WORKSPACE"
+            },
+            "retry_on_timeout": false,
+            "run_if": "ALL_SUCCESS",
+            "task_key": "subir_borrador",
+            "timeout_seconds": 1500
+          }
+        },
+        "run_if": "ALL_SUCCESS",
+        "task_key": "subir_borradores",
+        "timeout_seconds": 0
+      }
+    ],
+    "timeout_seconds": 0,
+    "webhook_notifications": {}
+  }
+}

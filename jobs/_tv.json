@@ -1,0 +1,734 @@
+{
+  "job_id": 813880207704409,
+  "run_id": 344639676640537,
+  "creator_user_name": "lopezechagarayjorge@gmail.com",
+  "number_in_job": 344639676640537,
+  "original_attempt_run_id": 344639676640537,
+  "state": {
+    "life_cycle_state": "RUNNING",
+    "state_message": "",
+    "user_cancelled_or_timedout": false
+  },
+  "job_parameters": [
+    {
+      "name": "cantidad",
+      "default": "1",
+      "value": "3"
+    },
+    {
+      "name": "hashtags",
+      "default": "motivacional,desarrollopersonal,motivacion,fyp,viral"
+    },
+    {
+      "name": "usar_apify",
+      "default": "true"
+    },
+    {
+      "name": "results_per_hashtag",
+      "default": "20"
+    },
+    {
+      "name": "max_charge_usd",
+      "default": "0.5"
+    },
+    {
+      "name": "top_n",
+      "default": "30"
+    },
+    {
+      "name": "min_likes",
+      "default": "20000"
+    },
+    {
+      "name": "video_fuente_id",
+      "default": ""
+    },
+    {
+      "name": "excluir_ids",
+      "default": ""
+    },
+    {
+      "name": "voz",
+      "default": "es-MX-JorgeNeural"
+    },
+    {
+      "name": "personaje",
+      "default": "motivacional"
+    },
+    {
+      "name": "rate",
+      "default": "+8%"
+    },
+    {
+      "name": "allow_resubmit",
+      "default": "false"
+    },
+    {
+      "name": "max_pendientes",
+      "default": "1"
+    },
+    {
+      "name": "n_hashtags",
+      "default": "5"
+    },
+    {
+      "name": "marca_usuario",
+      "default": "@alguienqueteescucha"
+    },
+    {
+      "name": "llm_model",
+      "default": "deepseek/deepseek-v4-pro-0813"
+    },
+    {
+      "name": "regenerar_ids",
+      "default": ""
+    },
+    {
+      "name": "desde_historial",
+      "default": "false"
+    },
+    {
+      "name": "reusar_personaje",
+      "default": "false"
+    },
+    {
+      "name": "sufijo",
+      "default": ""
+    },
+    {
+      "name": "dry_run",
+      "default": "false"
+    }
+  ],
+  "start_time": 1792911939193,
+  "setup_duration": 0,
+  "execution_duration": 0,
+  "cleanup_duration": 0,
+  "end_time": 0,
+  "run_duration": 1077000,
+  "queue_duration": 80493,
+  "trigger": "ONE_TIME",
+  "run_name": "tiktok_produccion_diaria",
+  "run_page_url": "https://dbc-e83fc5f3-f80b.cloud.databricks.com/?o=7474644109457991#job/813880207704409/run/344639676640537",
+  "run_type": "JOB_RUN",
+  "tasks": [
+    {
+      "run_id": 401684868754291,
+      "task_key": "guiones_60s",
+      "run_if": "ALL_SUCCESS",
+      "notebook_task": {
+        "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/guiones_60s_viral",
+        "base_parameters": {
+          "hashtags": "{{job.parameters.hashtags}}",
+          "llm_model": "deepseek/deepseek-v4-pro-0813",
+          "max_age_days": "30",
+          "max_charge_usd": "{{job.parameters.max_charge_usd}}",
+          "max_duration_sec": "60",
+          "min_likes": "{{job.parameters.min_likes}}",
+          "min_plays": "10000",
+          "results_per_hashtag": "{{job.parameters.results_per_hashtag}}",
+          "top_n": "{{job.parameters.top_n}}",
+          "usar_apify": "{{job.parameters.usar_apify}}"
+        },
+        "source": "WORKSPACE"
+      },
+      "state": {
+        "life_cycle_state": "TERMINATED",
+        "result_state": "SUCCESS",
+        "state_message": "",
+        "user_cancelled_or_timedout": false,
+        "queue_reason": "Queued due to reaching maximum number of allowed active runs (5)."
+      },
+      "run_page_url": "https://dbc-e83fc5f3-f80b.cloud.databricks.com/?o=7474644109457991#job/813880207704409/run/401684868754291",
+      "start_time": 1792911939237,
+      "setup_duration": 83000,
+      "execution_duration": 662000,
+      "cleanup_duration": 0,
+      "end_time": 1792912685120,
+      "queue_duration": 80553,
+      "attempt_number": 0,
+      "status": {
+        "state": "TERMINATED",
+        "termination_details": {
+          "code": "SUCCESS",
+          "type": "SUCCESS",
+          "message": ""
+        },
+        "queue_details": {
+          "code": "ACTIVE_RUNS_LIMIT_REACHED",
+          "message": "Queued due to reaching maximum number of allowed active runs (5)."
+        }
+      },
+      "effective_performance_target": "PERFORMANCE_OPTIMIZED"
+    },
+    {
+      "run_id": 646426949125912,
+      "task_key": "publicar_facebook",
+      "depends_on": [
+        {
+          "task_key": "generar_video"
+        }
+      ],
+      "run_if": "ALL_DONE",
+      "for_each_task": {
+        "inputs": "{{tasks.seleccionar_guiones.values.videos}}",
+        "task": {
+          "task_key": "publicar_facebook_item",
+          "run_if": "ALL_SUCCESS",
+          "notebook_task": {
+            "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/publicar_facebook",
+            "base_parameters": {
+              "publicar": "true",
+              "video_name": "{{input.video_name}}"
+            },
+            "source": "WORKSPACE"
+          },
+          "timeout_seconds": 1500,
+          "email_notifications": {},
+          "environment_key": "publish",
+          "disabled": false
+        },
+        "stats": {
+          "task_run_stats": {
+            "total_iterations": 3,
+            "scheduled_iterations": 3,
+            "active_iterations": 0,
+            "failed_iterations": 3,
+            "succeeded_iterations": 0,
+            "completed_iterations": 3
+          },
+          "error_message_stats": [
+            {
+              "error_message": "Workload failed, see run output for details",
+              "count": 3,
+              "termination_category": "RunExecutionError"
+            }
+          ]
+        }
+      },
+      "state": {
+        "life_cycle_state": "TERMINATED",
+        "result_state": "FAILED",
+        "state_message": "An error occurred during execution of task For each: Some iterations failed",
+        "user_cancelled_or_timedout": false
+      },
+      "run_page_url": "https://dbc-e83fc5f3-f80b.cloud.databricks.com/?o=7474644109457991#job/813880207704409/run/646426949125912",
+      "start_time": 1792912839753,
+      "setup_duration": 0,
+      "execution_duration": 160000,
+      "cleanup_duration": 0,
+      "end_time": 1792913000187,
+      "attempt_number": 0,
+      "status": {
+        "state": "TERMINATED",
+        "termination_details": {
+          "code": "RUN_EXECUTION_ERROR",
+          "type": "CLIENT_ERROR",
+          "message": "An error occurred during execution of task For each: Some iterations failed"
+        }
+      },
+      "effective_performance_target": "PERFORMANCE_OPTIMIZED"
+    },
+    {
+      "run_id": 111226212919507,
+      "task_key": "publicar_youtube",
+      "depends_on": [
+        {
+          "task_key": "generar_video"
+        }
+      ],
+      "run_if": "ALL_DONE",
+      "for_each_task": {
+        "inputs": "{{tasks.seleccionar_guiones.values.videos}}",
+        "task": {
+          "task_key": "publicar_youtube_item",
+          "run_if": "ALL_SUCCESS",
+          "notebook_task": {
+            "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/publicar_youtube",
+            "base_parameters": {
+              "privacy": "private",
+              "video_name": "{{input.video_name}}"
+            },
+            "source": "WORKSPACE"
+          },
+          "timeout_seconds": 1500,
+          "email_notifications": {},
+          "environment_key": "publish",
+          "disabled": false
+        },
+        "stats": {
+          "task_run_stats": {
+            "total_iterations": 3,
+            "scheduled_iterations": 3,
+            "active_iterations": 0,
+            "failed_iterations": 3,
+            "succeeded_iterations": 0,
+            "completed_iterations": 3
+          },
+          "error_message_stats": [
+            {
+              "error_message": "Workload failed, see run output for details",
+              "count": 3,
+              "termination_category": "RunExecutionError"
+            }
+          ]
+        }
+      },
+      "state": {
+        "life_cycle_state": "TERMINATED",
+        "result_state": "FAILED",
+        "state_message": "An error occurred during execution of task For each: Some iterations failed",
+        "user_cancelled_or_timedout": false
+      },
+      "run_page_url": "https://dbc-e83fc5f3-f80b.cloud.databricks.com/?o=7474644109457991#job/813880207704409/run/111226212919507",
+      "start_time": 1792912839691,
+      "setup_duration": 0,
+      "execution_duration": 118000,
+      "cleanup_duration": 0,
+      "end_time": 1792912957969,
+      "attempt_number": 0,
+      "status": {
+        "state": "TERMINATED",
+        "termination_details": {
+          "code": "RUN_EXECUTION_ERROR",
+          "type": "CLIENT_ERROR",
+          "message": "An error occurred during execution of task For each: Some iterations failed"
+        }
+      },
+      "effective_performance_target": "PERFORMANCE_OPTIMIZED"
+    },
+    {
+      "run_id": 795234840736298,
+      "task_key": "subir_borradores",
+      "depends_on": [
+        {
+          "task_key": "listar_pendientes"
+        }
+      ],
+      "run_if": "ALL_DONE",
+      "for_each_task": {
+        "inputs": "{{tasks.listar_pendientes.values.videos}}",
+        "task": {
+          "task_key": "subir_borrador",
+          "run_if": "ALL_SUCCESS",
+          "notebook_task": {
+            "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/upload_draft_video",
+            "base_parameters": {
+              "allow_resubmit": "{{job.parameters.allow_resubmit}}",
+              "dry_run": "false",
+              "own_videos": "{{input.video_name}}",
+              "video_path": "{{input.video_name}}"
+            },
+            "source": "WORKSPACE"
+          },
+          "timeout_seconds": 1500,
+          "email_notifications": {},
+          "environment_key": "publish",
+          "disabled": false
+        },
+        "stats": {
+          "task_run_stats": {
+            "total_iterations": 4,
+            "scheduled_iterations": 3,
+            "active_iterations": 1,
+            "failed_iterations": 2,
+            "succeeded_iterations": 0,
+            "completed_iterations": 2
+          },
+          "error_message_stats": [
+            {
+              "error_message": "Workload failed, see run output for details",
+              "count": 2,
+              "termination_category": "RunExecutionError"
+            }
+          ]
+        }
+      },
+      "state": {
+        "life_cycle_state": "RUNNING",
+        "state_message": "In run",
+        "user_cancelled_or_timedout": false
+      },
+      "run_page_url": "https://dbc-e83fc5f3-f80b.cloud.databricks.com/?o=7474644109457991#job/813880207704409/run/795234840736298",
+      "start_time": 1792912867928,
+      "setup_duration": 0,
+      "execution_duration": 0,
+      "cleanup_duration": 0,
+      "end_time": 0,
+      "attempt_number": 0,
+      "status": {
+        "state": "RUNNING"
+      },
+      "effective_performance_target": "PERFORMANCE_OPTIMIZED"
+    },
+    {
+      "run_id": 924401763445443,
+      "task_key": "seleccionar_guiones",
+      "description": "Fase serial: elige los guiones, disena las fichas del personaje y sortea los hashtags UNA vez para todo el lote, y deja el manifiesto que consume el for_each. Todo lo que depende del lote entero vive aqui porque dentro de N iteraciones aisladas no se puede mantener.",
+      "depends_on": [
+        {
+          "task_key": "guiones_60s"
+        }
+      ],
+      "run_if": "ALL_SUCCESS",
+      "notebook_task": {
+        "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/seleccionar_guiones",
+        "base_parameters": {
+          "cantidad": "{{job.parameters.cantidad}}",
+          "desde_historial": "{{job.parameters.desde_historial}}",
+          "excluir_ids": "{{job.parameters.excluir_ids}}",
+          "llm_model": "{{job.parameters.llm_model}}",
+          "marca_usuario": "{{job.parameters.marca_usuario}}",
+          "n_hashtags": "{{job.parameters.n_hashtags}}",
+          "personaje": "{{job.parameters.personaje}}",
+          "rate": "{{job.parameters.rate}}",
+          "regenerar_ids": "{{job.parameters.regenerar_ids}}",
+          "reusar_personaje": "{{job.parameters.reusar_personaje}}",
+          "sufijo": "{{job.parameters.sufijo}}",
+          "temas_hashtags": "{{job.parameters.hashtags}}",
+          "video_fuente_id": "{{job.parameters.video_fuente_id}}",
+          "voz": "{{job.parameters.voz}}"
+        },
+        "source": "WORKSPACE"
+      },
+      "environment_key": "video",
+      "state": {
+        "life_cycle_state": "TERMINATED",
+        "result_state": "SUCCESS",
+        "state_message": "",
+        "user_cancelled_or_timedout": false
+      },
+      "run_page_url": "https://dbc-e83fc5f3-f80b.cloud.databricks.com/?o=7474644109457991#job/813880207704409/run/924401763445443",
+      "start_time": 1792912685697,
+      "setup_duration": 3000,
+      "execution_duration": 91000,
+      "cleanup_duration": 0,
+      "end_time": 1792912780142,
+      "attempt_number": 0,
+      "status": {
+        "state": "TERMINATED",
+        "termination_details": {
+          "code": "SUCCESS",
+          "type": "SUCCESS",
+          "message": ""
+        }
+      },
+      "effective_performance_target": "PERFORMANCE_OPTIMIZED"
+    },
+    {
+      "run_id": 561325524407846,
+      "task_key": "listar_pendientes",
+      "depends_on": [
+        {
+          "task_key": "generar_video"
+        }
+      ],
+      "run_if": "ALL_DONE",
+      "notebook_task": {
+        "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/pendientes_borradores",
+        "base_parameters": {
+          "max_pendientes": "{{job.parameters.max_pendientes}}"
+        },
+        "source": "WORKSPACE"
+      },
+      "environment_key": "publish",
+      "state": {
+        "life_cycle_state": "TERMINATED",
+        "result_state": "SUCCESS",
+        "state_message": "",
+        "user_cancelled_or_timedout": false
+      },
+      "run_page_url": "https://dbc-e83fc5f3-f80b.cloud.databricks.com/?o=7474644109457991#job/813880207704409/run/561325524407846",
+      "start_time": 1792912839623,
+      "setup_duration": 2000,
+      "execution_duration": 25000,
+      "cleanup_duration": 0,
+      "end_time": 1792912867489,
+      "attempt_number": 0,
+      "status": {
+        "state": "TERMINATED",
+        "termination_details": {
+          "code": "SUCCESS",
+          "type": "SUCCESS",
+          "message": ""
+        }
+      },
+      "effective_performance_target": "PERFORMANCE_OPTIMIZED"
+    },
+    {
+      "run_id": 781904728772740,
+      "task_key": "publicar_tiktok_directo",
+      "depends_on": [
+        {
+          "task_key": "generar_video"
+        }
+      ],
+      "run_if": "ALL_DONE",
+      "for_each_task": {
+        "inputs": "{{tasks.seleccionar_guiones.values.videos}}",
+        "task": {
+          "task_key": "publicar_tiktok_directo_item",
+          "run_if": "ALL_SUCCESS",
+          "notebook_task": {
+            "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/publicar_tiktok_directo",
+            "base_parameters": {
+              "privacy_level": "",
+              "publicar": "true",
+              "video_name": "{{input.video_name}}"
+            },
+            "source": "WORKSPACE"
+          },
+          "timeout_seconds": 1500,
+          "email_notifications": {},
+          "environment_key": "publish",
+          "disabled": false
+        }
+      },
+      "state": {
+        "life_cycle_state": "SKIPPED",
+        "result_state": "DISABLED",
+        "state_message": "The task was disabled.",
+        "user_cancelled_or_timedout": false
+      },
+      "run_page_url": "https://dbc-e83fc5f3-f80b.cloud.databricks.com/?o=7474644109457991#job/813880207704409/run/781904728772740",
+      "start_time": 1792912839806,
+      "setup_duration": 0,
+      "execution_duration": 0,
+      "cleanup_duration": 0,
+      "end_time": 1792912839806,
+      "attempt_number": 0,
+      "status": {
+        "state": "TERMINATED",
+        "termination_details": {
+          "code": "DISABLED",
+          "type": "SUCCESS",
+          "message": "The task was disabled."
+        }
+      },
+      "effective_performance_target": "PERFORMANCE_OPTIMIZED"
+    },
+    {
+      "run_id": 758282077957336,
+      "task_key": "cerrar_distribucion",
+      "depends_on": [
+        {
+          "task_key": "subir_borradores"
+        },
+        {
+          "task_key": "publicar_youtube"
+        },
+        {
+          "task_key": "publicar_facebook"
+        },
+        {
+          "task_key": "publicar_tiktok_directo"
+        }
+      ],
+      "run_if": "ALL_DONE",
+      "notebook_task": {
+        "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/cerrar_distribucion",
+        "source": "WORKSPACE"
+      },
+      "environment_key": "publish",
+      "state": {
+        "life_cycle_state": "BLOCKED",
+        "state_message": "",
+        "user_cancelled_or_timedout": false
+      },
+      "run_page_url": "https://dbc-e83fc5f3-f80b.cloud.databricks.com/?o=7474644109457991#job/813880207704409/run/758282077957336",
+      "start_time": 0,
+      "setup_duration": 0,
+      "execution_duration": 0,
+      "cleanup_duration": 0,
+      "end_time": 0,
+      "attempt_number": 0,
+      "status": {
+        "state": "BLOCKED"
+      },
+      "effective_performance_target": "PERFORMANCE_OPTIMIZED"
+    },
+    {
+      "run_id": 209394841565625,
+      "task_key": "empaquetar",
+      "description": "Escribe el descripciones_reels.md del lote. Va aqui y no en el render porque ese archivo es UNO por lote y se sobrescribe: si lo escribiera cada iteracion paralela, la ultima en terminar ganaria y solo documentaria su video.",
+      "depends_on": [
+        {
+          "task_key": "generar_video"
+        }
+      ],
+      "run_if": "ALL_DONE",
+      "notebook_task": {
+        "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/empaquetar_lote",
+        "base_parameters": {
+          "manifiesto": "{{tasks.seleccionar_guiones.values.manifiesto}}"
+        },
+        "source": "WORKSPACE"
+      },
+      "environment_key": "publish",
+      "state": {
+        "life_cycle_state": "TERMINATED",
+        "result_state": "FAILED",
+        "state_message": "Workload failed, see run output for details",
+        "user_cancelled_or_timedout": false
+      },
+      "run_page_url": "https://dbc-e83fc5f3-f80b.cloud.databricks.com/?o=7474644109457991#job/813880207704409/run/209394841565625",
+      "start_time": 1792912839554,
+      "setup_duration": 3000,
+      "execution_duration": 20000,
+      "cleanup_duration": 0,
+      "end_time": 1792912863366,
+      "attempt_number": 0,
+      "status": {
+        "state": "TERMINATED",
+        "termination_details": {
+          "code": "RUN_EXECUTION_ERROR",
+          "type": "CLIENT_ERROR",
+          "message": "Workload failed, see run output for details"
+        }
+      },
+      "effective_performance_target": "PERFORMANCE_OPTIMIZED"
+    },
+    {
+      "run_id": 507642711059034,
+      "task_key": "empaquetar",
+      "description": "Escribe el descripciones_reels.md del lote. Va aqui y no en el render porque ese archivo es UNO por lote y se sobrescribe: si lo escribiera cada iteracion paralela, la ultima en terminar ganaria y solo documentaria su video.",
+      "depends_on": [
+        {
+          "task_key": "generar_video"
+        }
+      ],
+      "run_if": "ALL_DONE",
+      "notebook_task": {
+        "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/empaquetar_lote",
+        "base_parameters": {
+          "manifiesto": "{{tasks.seleccionar_guiones.values.manifiesto}}"
+        },
+        "source": "WORKSPACE"
+      },
+      "environment_key": "publish",
+      "state": {
+        "life_cycle_state": "TERMINATED",
+        "result_state": "FAILED",
+        "state_message": "Workload failed, see run output for details",
+        "user_cancelled_or_timedout": false
+      },
+      "run_page_url": "https://dbc-e83fc5f3-f80b.cloud.databricks.com/?o=7474644109457991#job/813880207704409/run/507642711059034",
+      "start_time": 1792912867891,
+      "setup_duration": 2000,
+      "execution_duration": 18000,
+      "cleanup_duration": 0,
+      "end_time": 1792912888048,
+      "attempt_number": 1,
+      "status": {
+        "state": "TERMINATED",
+        "termination_details": {
+          "code": "RUN_EXECUTION_ERROR",
+          "type": "CLIENT_ERROR",
+          "message": "Workload failed, see run output for details"
+        }
+      },
+      "effective_performance_target": "PERFORMANCE_OPTIMIZED"
+    },
+    {
+      "run_id": 514548174199720,
+      "task_key": "generar_video",
+      "description": "for_each_task: una iteracion por guion, hasta concurrency a la vez. Cada iteracion tiene su propio compute, que es lo que paraleliza de verdad (el render es CPU puro: Pillow + dos encodes x264).",
+      "depends_on": [
+        {
+          "task_key": "seleccionar_guiones"
+        }
+      ],
+      "run_if": "ALL_SUCCESS",
+      "for_each_task": {
+        "inputs": "{{tasks.seleccionar_guiones.values.ids}}",
+        "concurrency": 3,
+        "task": {
+          "task_key": "render_video",
+          "notebook_task": {
+            "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/render_video_lote",
+            "base_parameters": {
+              "dry_run": "{{job.parameters.dry_run}}",
+              "manifiesto": "{{tasks.seleccionar_guiones.values.manifiesto}}",
+              "video_fuente_id": "{{input.video_fuente_id}}"
+            }
+          },
+          "max_retries": 1,
+          "timeout_seconds": 2400,
+          "webhook_notifications": {
+            "on_failure": [
+              {
+                "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8"
+              }
+            ]
+          },
+          "environment_key": "video"
+        },
+        "stats": {
+          "task_run_stats": {
+            "total_iterations": 3,
+            "scheduled_iterations": 3,
+            "active_iterations": 0,
+            "failed_iterations": 3,
+            "succeeded_iterations": 0,
+            "completed_iterations": 3
+          },
+          "error_message_stats": [
+            {
+              "error_message": "Workload failed, see run output for details",
+              "count": 3,
+              "termination_category": "RunExecutionError"
+            }
+          ]
+        }
+      },
+      "state": {
+        "life_cycle_state": "TERMINATED",
+        "result_state": "FAILED",
+        "state_message": "An error occurred during execution of task For each: Some iterations failed",
+        "user_cancelled_or_timedout": false
+      },
+      "run_page_url": "https://dbc-e83fc5f3-f80b.cloud.databricks.com/?o=7474644109457991#job/813880207704409/run/514548174199720",
+      "start_time": 1792912780501,
+      "setup_duration": 0,
+      "execution_duration": 58000,
+      "cleanup_duration": 0,
+      "end_time": 1792912839233,
+      "attempt_number": 0,
+      "status": {
+        "state": "TERMINATED",
+        "termination_details": {
+          "code": "RUN_EXECUTION_ERROR",
+          "type": "CLIENT_ERROR",
+          "message": "An error occurred during execution of task For each: Some iterations failed"
+        }
+      },
+      "effective_performance_target": "PERFORMANCE_OPTIMIZED"
+    }
+  ],
+  "format": "MULTI_TASK",
+  "status": {
+    "state": "RUNNING"
+  },
+  "environments": [
+    {
+      "environment_key": "publish",
+      "spec": {
+        "client": "3"
+      }
+    },
+    {
+      "environment_key": "video",
+      "spec": {
+        "client": "3",
+        "dependencies": [
+          "pillow==10.3.0",
+          "edge-tts==7.3.1",
+          "imageio-ffmpeg",
+          "openai"
+        ]
+      }
+    }
+  ],
+  "job_run_id": 344639676640537,
+  "effective_performance_target": "PERFORMANCE_OPTIMIZED"
+}

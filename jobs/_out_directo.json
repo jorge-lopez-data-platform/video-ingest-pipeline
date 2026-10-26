@@ -1,0 +1,70 @@
+{
+  "cleanup_duration": 0,
+  "creator_user_name": "lopezechagarayjorge@gmail.com",
+  "effective_performance_target": "PERFORMANCE_OPTIMIZED",
+  "end_time": 1792910065144,
+  "execution_duration": 20000,
+  "job_id": 119323381751576,
+  "job_run_id": 1086427901634436,
+  "number_in_job": 1086427901634436,
+  "run_duration": 23788,
+  "run_id": 1086427901634436,
+  "run_name": "probe_directo_nopublish",
+  "run_page_url": "https://dbc-e83fc5f3-f80b.cloud.databricks.com/?o=7474644109457991#job/119323381751576/run/1086427901634436",
+  "run_type": "SUBMIT_RUN",
+  "setup_duration": 3000,
+  "start_time": 1792910041356,
+  "state": {
+    "life_cycle_state": "TERMINATED",
+    "result_state": "SUCCESS",
+    "state_message": "",
+    "user_cancelled_or_timedout": false
+  },
+  "status": {
+    "state": "TERMINATED",
+    "termination_details": {
+      "code": "SUCCESS",
+      "message": "",
+      "type": "SUCCESS"
+    }
+  },
+  "tasks": [
+    {
+      "attempt_number": 0,
+      "cleanup_duration": 0,
+      "effective_performance_target": "PERFORMANCE_OPTIMIZED",
+      "end_time": 1792910064649,
+      "environment_key": "publish",
+      "execution_duration": 20000,
+      "notebook_task": {
+        "base_parameters": {
+          "privacy_level": "",
+          "publicar": "false",
+          "video_name": "jesucitos_paraiso.mp4"
+        },
+        "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/publicar_tiktok_directo",
+        "source": "WORKSPACE"
+      },
+      "run_id": 1094289762183686,
+      "run_if": "ALL_SUCCESS",
+      "run_page_url": "https://dbc-e83fc5f3-f80b.cloud.databricks.com/?o=7474644109457991#job/119323381751576/run/1094289762183686",
+      "setup_duration": 3000,
+      "start_time": 1792910041386,
+      "state": {
+        "life_cycle_state": "TERMINATED",
+        "result_state": "SUCCESS",
+        "state_message": "",
+        "user_cancelled_or_timedout": false
+      },
+      "status": {
+        "state": "TERMINATED",
+        "termination_details": {
+          "code": "SUCCESS",
+          "message": "",
+          "type": "SUCCESS"
+        }
+      },
+      "task_key": "directo"
+    }
+  ]
+}

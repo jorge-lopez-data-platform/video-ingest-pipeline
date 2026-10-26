@@ -1,0 +1,26 @@
+{
+  "run_name": "prueba_facebook_1_video",
+  "tasks": [
+    {
+      "task_key": "publicar_facebook",
+      "environment_key": "publish",
+      "notebook_task": {
+        "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/publicar_facebook",
+        "source": "WORKSPACE",
+        "base_parameters": {
+          "video_name": "motivacional_7694828473117871361_v2.mp4",
+          "publicar": "true"
+        }
+      },
+      "timeout_seconds": 1800
+    }
+  ],
+  "environments": [
+    {
+      "environment_key": "publish",
+      "spec": {
+        "client": "3"
+      }
+    }
+  ]
+}

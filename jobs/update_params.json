@@ -1,0 +1,11 @@
+{
+  "job_id": 294643041593670,
+  "new_settings": {
+    "parameters": [
+      { "name": "video_path", "default": "jesucitos_paraiso.mp4" },
+      { "name": "own_videos", "default": "jesucitos_paraiso.mp4,video_amorpropio.mp4,7270127155529452843.mp4" },
+      { "name": "dry_run", "default": "false" },
+      { "name": "allow_resubmit", "default": "false" }
+    ]
+  }
+}

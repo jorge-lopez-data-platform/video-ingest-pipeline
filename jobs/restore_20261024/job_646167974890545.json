@@ -1,0 +1,36 @@
+{
+  "job_id": 646167974890545,
+  "new_settings": {
+    "email_notifications": {},
+    "max_concurrent_runs": 1,
+    "name": "tiktok_guiones_60s_viral",
+    "queue": {
+      "enabled": true
+    },
+    "tasks": [
+      {
+        "disabled": false,
+        "email_notifications": {},
+        "notebook_task": {
+          "base_parameters": {
+            "hashtags": "parati,viral,curiosidades",
+            "llm_model": "deepseek/deepseek-v4-pro-0813",
+            "max_age_days": "30",
+            "max_charge_usd": "1.0",
+            "max_duration_sec": "60",
+            "min_plays": "10000",
+            "results_per_hashtag": "10",
+            "top_n": "10"
+          },
+          "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/guiones_60s_viral",
+          "source": "WORKSPACE"
+        },
+        "run_if": "ALL_SUCCESS",
+        "task_key": "guiones_60s",
+        "timeout_seconds": 0
+      }
+    ],
+    "timeout_seconds": 0,
+    "webhook_notifications": {}
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "job_id": 584295967848266,
+  "new_settings": {
+    "email_notifications": {},
+    "max_concurrent_runs": 1,
+    "name": "tiktok_ingest_daily",
+    "queue": {
+      "enabled": true
+    },
+    "schedule": {
+      "pause_status": "PAUSED",
+      "quartz_cron_expression": "0 0 6 * * ?",
+      "timezone_id": "UTC"
+    },
+    "tasks": [
+      {
+        "disabled": false,
+        "email_notifications": {},
+        "notebook_task": {
+          "base_parameters": {
+            "hashtags": "databricks,dataengineering,datascience,sql,bigdata",
+            "max_charge_usd": "2.0",
+            "results_per_hashtag": "100",
+            "run_timeout_secs": "900"
+          },
+          "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/ingest_tiktok",
+          "source": "WORKSPACE"
+        },
+        "run_if": "ALL_SUCCESS",
+        "task_key": "ingest_tiktok",
+        "timeout_seconds": 0
+      }
+    ],
+    "timeout_seconds": 3600,
+    "webhook_notifications": {}
+  }
+}

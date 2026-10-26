@@ -1,0 +1,34 @@
+{
+  "run_name": "resubir_borradores_inbox_lleno_12",
+  "tasks": [
+    {
+      "task_key": "subir_pendientes",
+      "for_each_task": {
+        "inputs": "[{\"video_name\": \"motivacional_7689270221554650399_v2.mp4\"}, {\"video_name\": \"motivacional_7689534319064304948_v2.mp4\"}, {\"video_name\": \"motivacional_7690238024961019158_v2.mp4\"}, {\"video_name\": \"motivacional_7691466036113116424_v2.mp4\"}, {\"video_name\": \"motivacional_7694789390794640648_v2.mp4\"}, {\"video_name\": \"motivacional_7694999235355217182_v2.mp4\"}, {\"video_name\": \"motivacional_7695578932199935253_v2.mp4\"}, {\"video_name\": \"motivacional_7696949173475659040_v2.mp4\"}, {\"video_name\": \"motivacional_7697222371517664544_v2.mp4\"}, {\"video_name\": \"motivacional_7698382207630495008_v2.mp4\"}, {\"video_name\": \"motivacional_7699058845808594209_v2.mp4\"}, {\"video_name\": \"motivacional_7699113374784785694_v2.mp4\"}]",
+        "task": {
+          "task_key": "subir_borrador",
+          "environment_key": "publish",
+          "notebook_task": {
+            "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/upload_draft_video",
+            "source": "WORKSPACE",
+            "base_parameters": {
+              "video_path": "{{input.video_name}}",
+              "own_videos": "{{input.video_name}}",
+              "allow_resubmit": "true",
+              "dry_run": "false"
+            }
+          },
+          "timeout_seconds": 1500
+        }
+      }
+    }
+  ],
+  "environments": [
+    {
+      "environment_key": "publish",
+      "spec": {
+        "client": "3"
+      }
+    }
+  ]
+}

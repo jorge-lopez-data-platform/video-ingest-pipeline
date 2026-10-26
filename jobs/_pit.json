@@ -1,0 +1,166 @@
+{
+  "error": "TypeError: expected str, bytes or os.PathLike object, not NoneType",
+  "error_trace": "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m\n\u001b[0;31mTypeError\u001b[0m                                 Traceback (most recent call last)\nFile \u001b[0;32m\u003ccommand-6594617891770161\u003e, line 4\u001b[0m\n\u001b[1;32m      2\u001b[0m publicacion \u001b[38;5;241m=\u001b[39m rutas\u001b[38;5;241m.\u001b[39mcompanero(video_name, \u001b[38;5;124m\"\u001b[39m\u001b[38;5;124m_publicacion.txt\u001b[39m\u001b[38;5;124m\"\u001b[39m, VIDEOS_DIR)\n\u001b[1;32m      3\u001b[0m \u001b[38;5;28;01mtry\u001b[39;00m:\n\u001b[0;32m----\u003e 4\u001b[0m     \u001b[38;5;28;01mwith\u001b[39;00m \u001b[38;5;28mopen\u001b[39m(publicacion, encoding\u001b[38;5;241m=\u001b[39m\u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mutf-8\u001b[39m\u001b[38;5;124m\"\u001b[39m) \u001b[38;5;28;01mas\u001b[39;00m f:\n\u001b[1;32m      5\u001b[0m         lineas \u001b[38;5;241m=\u001b[39m [l\u001b[38;5;241m.\u001b[39mstrip() \u001b[38;5;28;01mfor\u001b[39;00m l \u001b[38;5;129;01min\u001b[39;00m f\u001b[38;5;241m.\u001b[39mread()\u001b[38;5;241m.\u001b[39msplitlines() \u001b[38;5;28;01mif\u001b[39;00m l\u001b[38;5;241m.\u001b[39mstrip()]\n\u001b[1;32m      6\u001b[0m     \u001b[38;5;28;01mif\u001b[39;00m lineas:\n\nFile \u001b[0;32m/databricks/python/lib/python3.12/site-packages/IPython/core/interactiveshell.py:324\u001b[0m, in \u001b[0;36m_modified_open\u001b[0;34m(file, *args, **kwargs)\u001b[0m\n\u001b[1;32m    317\u001b[0m \u001b[38;5;28;01mif\u001b[39;00m file \u001b[38;5;129;01min\u001b[39;00m {\u001b[38;5;241m0\u001b[39m, \u001b[38;5;241m1\u001b[39m, \u001b[38;5;241m2\u001b[39m}:\n\u001b[1;32m    318\u001b[0m     \u001b[38;5;28;01mraise\u001b[39;00m \u001b[38;5;167;01mValueError\u001b[39;00m(\n\u001b[1;32m    319\u001b[0m         \u001b[38;5;124mf\u001b[39m\u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mIPython won\u001b[39m\u001b[38;5;124m'\u001b[39m\u001b[38;5;124mt let you open fd=\u001b[39m\u001b[38;5;132;01m{\u001b[39;00mfile\u001b[38;5;132;01m}\u001b[39;00m\u001b[38;5;124m by default \u001b[39m\u001b[38;5;124m\"\u001b[39m\n\u001b[1;32m    320\u001b[0m         \u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mas it is likely to crash IPython. If you know what you are doing, \u001b[39m\u001b[38;5;124m\"\u001b[39m\n\u001b[1;32m    321\u001b[0m         \u001b[38;5;124m\"\u001b[39m\u001b[38;5;124myou can use builtins\u001b[39m\u001b[38;5;124m'\u001b[39m\u001b[38;5;124m open.\u001b[39m\u001b[38;5;124m\"\u001b[39m\n\u001b[1;32m    322\u001b[0m     )\n\u001b[0;32m--\u003e 324\u001b[0m \u001b[38;5;28;01mreturn\u001b[39;00m io_open(file, \u001b[38;5;241m*\u001b[39margs, \u001b[38;5;241m*\u001b[39m\u001b[38;5;241m*\u001b[39mkwargs)\n\n\u001b[0;31mTypeError\u001b[0m: expected str, bytes or os.PathLike object, not NoneType",
+  "metadata": {
+    "cleanup_duration": 0,
+    "creator_user_name": "lopezechagarayjorge@gmail.com",
+    "effective_performance_target": "PERFORMANCE_OPTIMIZED",
+    "end_time": 1792914862733,
+    "execution_duration": 23000,
+    "job_id": 813880207704409,
+    "job_parameters": [
+      {
+        "default": "1",
+        "name": "cantidad",
+        "value": "3"
+      },
+      {
+        "default": "motivacional,desarrollopersonal,motivacion,fyp,viral",
+        "name": "hashtags"
+      },
+      {
+        "default": "true",
+        "name": "usar_apify"
+      },
+      {
+        "default": "20",
+        "name": "results_per_hashtag"
+      },
+      {
+        "default": "0.5",
+        "name": "max_charge_usd"
+      },
+      {
+        "default": "30",
+        "name": "top_n"
+      },
+      {
+        "default": "20000",
+        "name": "min_likes"
+      },
+      {
+        "default": "",
+        "name": "video_fuente_id"
+      },
+      {
+        "default": "",
+        "name": "excluir_ids"
+      },
+      {
+        "default": "es-MX-JorgeNeural",
+        "name": "voz"
+      },
+      {
+        "default": "motivacional",
+        "name": "personaje"
+      },
+      {
+        "default": "+8%",
+        "name": "rate"
+      },
+      {
+        "default": "false",
+        "name": "allow_resubmit"
+      },
+      {
+        "default": "1",
+        "name": "max_pendientes"
+      },
+      {
+        "default": "5",
+        "name": "n_hashtags"
+      },
+      {
+        "default": "@alguienqueteescucha",
+        "name": "marca_usuario"
+      },
+      {
+        "default": "deepseek/deepseek-v4-pro-0813",
+        "name": "llm_model"
+      },
+      {
+        "default": "",
+        "name": "regenerar_ids"
+      },
+      {
+        "default": "false",
+        "name": "desde_historial"
+      },
+      {
+        "default": "false",
+        "name": "reusar_personaje"
+      },
+      {
+        "default": "",
+        "name": "sufijo"
+      },
+      {
+        "default": "false",
+        "name": "dry_run",
+        "value": "true"
+      }
+    ],
+    "job_run_id": 819382821389372,
+    "number_in_job": 161951650793656,
+    "original_attempt_run_id": 161951650793656,
+    "run_id": 161951650793656,
+    "run_name": "publicar_youtube_item iteration #0",
+    "run_page_url": "https://dbc-e83fc5f3-f80b.cloud.databricks.com/?o=7474644109457991#job/813880207704409/run/161951650793656",
+    "run_type": "JOB_RUN",
+    "setup_duration": 1000,
+    "start_time": 1792914838339,
+    "state": {
+      "life_cycle_state": "TERMINATED",
+      "result_state": "FAILED",
+      "state_message": "Workload failed, see run output for details",
+      "user_cancelled_or_timedout": false
+    },
+    "status": {
+      "state": "TERMINATED",
+      "termination_details": {
+        "code": "RUN_EXECUTION_ERROR",
+        "message": "Workload failed, see run output for details",
+        "type": "CLIENT_ERROR"
+      }
+    },
+    "tasks": [
+      {
+        "attempt_number": 0,
+        "cleanup_duration": 0,
+        "effective_performance_target": "PERFORMANCE_OPTIMIZED",
+        "end_time": 1792914862733,
+        "environment_key": "publish",
+        "execution_duration": 23000,
+        "notebook_task": {
+          "base_parameters": {
+            "privacy": "private",
+            "video_name": "{{input}}"
+          },
+          "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/publicar_youtube",
+          "source": "WORKSPACE"
+        },
+        "run_id": 161951650793656,
+        "run_page_url": "https://dbc-e83fc5f3-f80b.cloud.databricks.com/?o=7474644109457991#job/813880207704409/run/161951650793656",
+        "setup_duration": 1000,
+        "start_time": 1792914838339,
+        "state": {
+          "life_cycle_state": "TERMINATED",
+          "result_state": "FAILED",
+          "state_message": "Workload failed, see run output for details",
+          "user_cancelled_or_timedout": false
+        },
+        "status": {
+          "state": "TERMINATED",
+          "termination_details": {
+            "code": "RUN_EXECUTION_ERROR",
+            "message": "Workload failed, see run output for details",
+            "type": "CLIENT_ERROR"
+          }
+        },
+        "task_key": "publicar_youtube_item_iteration_0"
+      }
+    ],
+    "trigger": "ONE_TIME"
+  },
+  "notebook_output": {}
+}

@@ -1,0 +1,163 @@
+{
+  "job_id": 344765837006741,
+  "run_id": 223019346318998,
+  "creator_user_name": "lopezechagarayjorge@gmail.com",
+  "number_in_job": 223019346318998,
+  "state": {
+    "life_cycle_state": "RUNNING",
+    "state_message": "",
+    "user_cancelled_or_timedout": false
+  },
+  "start_time": 1792913364558,
+  "setup_duration": 0,
+  "execution_duration": 0,
+  "cleanup_duration": 0,
+  "end_time": 0,
+  "run_duration": 36023,
+  "run_name": "test_input_formas",
+  "run_page_url": "https://dbc-e83fc5f3-f80b.cloud.databricks.com/?o=7474644109457991#job/344765837006741/run/223019346318998",
+  "run_type": "SUBMIT_RUN",
+  "tasks": [
+    {
+      "run_id": 955091665101364,
+      "task_key": "plano",
+      "depends_on": [
+        {
+          "task_key": "publica"
+        }
+      ],
+      "run_if": "ALL_SUCCESS",
+      "for_each_task": {
+        "inputs": "{{tasks.publica.values.ids_planos}}",
+        "concurrency": 2,
+        "task": {
+          "task_key": "item_plano",
+          "notebook_task": {
+            "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/_tmp/_tmp_tv_get",
+            "base_parameters": {
+              "video_fuente_id": "{{input}}"
+            }
+          }
+        },
+        "stats": {
+          "task_run_stats": {
+            "total_iterations": 2,
+            "scheduled_iterations": 2,
+            "active_iterations": 1,
+            "failed_iterations": 0,
+            "succeeded_iterations": 1,
+            "completed_iterations": 1
+          }
+        }
+      },
+      "state": {
+        "life_cycle_state": "RUNNING",
+        "state_message": "In run",
+        "user_cancelled_or_timedout": false
+      },
+      "run_page_url": "https://dbc-e83fc5f3-f80b.cloud.databricks.com/?o=7474644109457991#job/344765837006741/run/955091665101364",
+      "start_time": 1792913380691,
+      "setup_duration": 0,
+      "execution_duration": 0,
+      "cleanup_duration": 0,
+      "end_time": 0,
+      "attempt_number": 0,
+      "status": {
+        "state": "RUNNING"
+      },
+      "effective_performance_target": "PERFORMANCE_OPTIMIZED"
+    },
+    {
+      "run_id": 1049389978651201,
+      "task_key": "por_clave",
+      "depends_on": [
+        {
+          "task_key": "publica"
+        }
+      ],
+      "run_if": "ALL_SUCCESS",
+      "for_each_task": {
+        "inputs": "{{tasks.publica.values.ids}}",
+        "concurrency": 2,
+        "task": {
+          "task_key": "item_clave",
+          "notebook_task": {
+            "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/_tmp/_tmp_tv_get",
+            "base_parameters": {
+              "video_fuente_id": "{{input.video_fuente_id}}"
+            }
+          }
+        },
+        "stats": {
+          "task_run_stats": {
+            "total_iterations": 2,
+            "scheduled_iterations": 2,
+            "active_iterations": 0,
+            "failed_iterations": 0,
+            "succeeded_iterations": 2,
+            "completed_iterations": 2
+          }
+        }
+      },
+      "state": {
+        "life_cycle_state": "TERMINATED",
+        "result_state": "SUCCESS",
+        "state_message": "",
+        "user_cancelled_or_timedout": false
+      },
+      "run_page_url": "https://dbc-e83fc5f3-f80b.cloud.databricks.com/?o=7474644109457991#job/344765837006741/run/1049389978651201",
+      "start_time": 1792913380616,
+      "setup_duration": 0,
+      "execution_duration": 15000,
+      "cleanup_duration": 0,
+      "end_time": 1792913396098,
+      "attempt_number": 0,
+      "status": {
+        "state": "TERMINATED",
+        "termination_details": {
+          "code": "SUCCESS",
+          "type": "SUCCESS",
+          "message": ""
+        }
+      },
+      "effective_performance_target": "PERFORMANCE_OPTIMIZED"
+    },
+    {
+      "run_id": 951365665929673,
+      "task_key": "publica",
+      "run_if": "ALL_SUCCESS",
+      "notebook_task": {
+        "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/_tmp/_tmp_tv_set",
+        "source": "WORKSPACE"
+      },
+      "state": {
+        "life_cycle_state": "TERMINATED",
+        "result_state": "SUCCESS",
+        "state_message": "",
+        "user_cancelled_or_timedout": false
+      },
+      "run_page_url": "https://dbc-e83fc5f3-f80b.cloud.databricks.com/?o=7474644109457991#job/344765837006741/run/951365665929673",
+      "start_time": 1792913364590,
+      "setup_duration": 3000,
+      "execution_duration": 12000,
+      "cleanup_duration": 0,
+      "end_time": 1792913380271,
+      "attempt_number": 0,
+      "status": {
+        "state": "TERMINATED",
+        "termination_details": {
+          "code": "SUCCESS",
+          "type": "SUCCESS",
+          "message": ""
+        }
+      },
+      "effective_performance_target": "PERFORMANCE_OPTIMIZED"
+    }
+  ],
+  "format": "MULTI_TASK",
+  "status": {
+    "state": "RUNNING"
+  },
+  "job_run_id": 223019346318998,
+  "effective_performance_target": "PERFORMANCE_OPTIMIZED"
+}

@@ -1,0 +1,93 @@
+{
+  "run_name": "10_videos_a_borradores",
+  "tasks": [
+    {
+      "task_key": "guiones_60s",
+      "notebook_task": {
+        "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/guiones_60s_viral",
+        "base_parameters": {
+          "hashtags": "motivacional,desarrollopersonal,motivacion,fyp,viral",
+          "results_per_hashtag": "60",
+          "max_charge_usd": "0.5",
+          "top_n": "30",
+          "min_likes": "20000",
+          "llm_model": "deepseek/deepseek-v4-pro-0813",
+          "max_age_days": "30",
+          "max_duration_sec": "60",
+          "min_plays": "10000"
+        }
+      },
+      "timeout_seconds": 5400
+    },
+    {
+      "task_key": "generar_video",
+      "depends_on": [
+        {
+          "task_key": "guiones_60s"
+        }
+      ],
+      "environment_key": "video",
+      "notebook_task": {
+        "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/generar_video_guion",
+        "base_parameters": {
+          "cantidad": "10",
+          "video_fuente_id": "",
+          "excluir_ids": "",
+          "voz": "es-MX-JorgeNeural",
+          "rate": "+8%",
+          "personaje": "motivacional",
+          "solo_sin_verificar": "false",
+          "dry_run": "false"
+        }
+      },
+      "timeout_seconds": 9000
+    },
+    {
+      "task_key": "subir_borradores",
+      "depends_on": [
+        {
+          "task_key": "generar_video"
+        }
+      ],
+      "for_each_task": {
+        "inputs": "{{tasks.generar_video.values.videos}}",
+        "task": {
+          "task_key": "subir_borrador",
+          "max_retries": 2,
+          "min_retry_interval_millis": 60000,
+          "environment_key": "publish",
+          "notebook_task": {
+            "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/upload_draft_video",
+            "base_parameters": {
+              "video_path": "{{input.video_name}}",
+              "own_videos": "{{input.video_name}}",
+              "allow_resubmit": "true",
+              "dry_run": "false"
+            }
+          },
+          "timeout_seconds": 1500
+        }
+      }
+    }
+  ],
+  "environments": [
+    {
+      "environment_key": "video",
+      "spec": {
+        "client": "3",
+        "dependencies": [
+          "pillow==10.3.0",
+          "edge-tts==7.3.1",
+          "imageio-ffmpeg",
+          "openai"
+        ]
+      }
+    },
+    {
+      "environment_key": "publish",
+      "spec": {
+        "client": "3"
+      }
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "name": "tiktok_jesucitos_draft",
+  "description": "Sends one of the owner's own videos to the TikTok inbox as a draft (inbox upload endpoint, video.upload scope only). The owner publishes it from the app.",
+  "format": "MULTI_TASK",
+  "max_concurrent_runs": 1,
+  "queue": { "enabled": true },
+  "timeout_seconds": 1800,
+  "email_notifications": {
+    "on_failure": ["lopezechagarayjorge@gmail.com"],
+    "on_duration_warning_threshold_exceeded": ["lopezechagarayjorge@gmail.com"],
+    "no_alert_for_skipped_runs": true
+  },
+  "health": {
+    "rules": [
+      { "metric": "RUN_DURATION_SECONDS", "op": "GREATER_THAN", "value": 900 }
+    ]
+  },
+  "tags": {
+    "project": "tiktok",
+    "stage": "publish",
+    "content": "own"
+  },
+  "parameters": [
+    { "name": "video_path", "default": "jesucitos_paraiso.mp4" },
+    {
+      "name": "own_videos",
+      "default": "jesucitos_paraiso.mp4,video_amorpropio.mp4,7270127155529452843.mp4"
+    },
+    { "name": "dry_run", "default": "false" },
+    { "name": "allow_resubmit", "default": "false" }
+  ],
+  "environments": [
+    { "environment_key": "default", "spec": { "client": "2" } }
+  ],
+  "tasks": [
+    {
+      "task_key": "upload_draft",
+      "environment_key": "default",
+      "timeout_seconds": 1500,
+      "max_retries": 2,
+      "min_retry_interval_millis": 60000,
+      "retry_on_timeout": false,
+      "notebook_task": {
+        "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/upload_draft_video",
+        "source": "WORKSPACE",
+        "base_parameters": {
+          "video_path": "{{job.parameters.video_path}}",
+          "own_videos": "{{job.parameters.own_videos}}",
+          "dry_run": "{{job.parameters.dry_run}}",
+          "allow_resubmit": "{{job.parameters.allow_resubmit}}"
+        }
+      }
+    }
+  ]
+}

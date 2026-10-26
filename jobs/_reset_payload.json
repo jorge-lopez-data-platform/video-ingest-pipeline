@@ -1,0 +1,467 @@
+{
+ "job_id": 813880207704409,
+ "new_settings": {
+  "description": "Produccion diaria de TikTok: guiones virales (opcionalmente con Apify), video animado con subtitulos, borrador en el inbox y publicacion en YouTube Shorts y Facebook Reels. Los videos se renderizan EN PARALELO: `seleccionar_guiones` decide el lote una sola vez (guiones, caras, hashtags) y `generar_video` es un for_each_task con concurrency=3 iteraciones simultaneas. Publicacion directa en TikTok deshabilitada: la app no esta auditada por TikTok.",
+  "email_notifications": {},
+  "environments": [
+   {
+    "environment_key": "publish",
+    "spec": {
+     "client": "3"
+    }
+   },
+   {
+    "environment_key": "video",
+    "spec": {
+     "client": "3",
+     "dependencies": [
+      "pillow==10.3.0",
+      "edge-tts==7.3.1",
+      "imageio-ffmpeg",
+      "openai"
+     ]
+    }
+   }
+  ],
+  "max_concurrent_runs": 1,
+  "name": "tiktok_produccion_diaria",
+  "parameters": [
+   {
+    "default": "1",
+    "name": "cantidad"
+   },
+   {
+    "default": "motivacional,desarrollopersonal,motivacion,fyp,viral",
+    "name": "hashtags"
+   },
+   {
+    "default": "true",
+    "name": "usar_apify"
+   },
+   {
+    "default": "20",
+    "name": "results_per_hashtag"
+   },
+   {
+    "default": "0.5",
+    "name": "max_charge_usd"
+   },
+   {
+    "default": "30",
+    "name": "top_n"
+   },
+   {
+    "default": "20000",
+    "name": "min_likes"
+   },
+   {
+    "default": "",
+    "name": "video_fuente_id"
+   },
+   {
+    "default": "",
+    "name": "excluir_ids"
+   },
+   {
+    "default": "es-MX-JorgeNeural",
+    "name": "voz"
+   },
+   {
+    "default": "motivacional",
+    "name": "personaje"
+   },
+   {
+    "default": "+8%",
+    "name": "rate"
+   },
+   {
+    "default": "true",
+    "name": "allow_resubmit"
+   },
+   {
+    "default": "2",
+    "name": "max_pendientes"
+   },
+   {
+    "default": "5",
+    "name": "n_hashtags"
+   },
+   {
+    "default": "@alguienqueteescucha",
+    "name": "marca_usuario"
+   },
+   {
+    "name": "llm_model",
+    "default": "deepseek/deepseek-v4-pro-0813"
+   },
+   {
+    "name": "regenerar_ids",
+    "default": ""
+   },
+   {
+    "name": "desde_historial",
+    "default": "false"
+   },
+   {
+    "name": "reusar_personaje",
+    "default": "false"
+   },
+   {
+    "name": "sufijo",
+    "default": ""
+   },
+   {
+    "name": "dry_run",
+    "default": "false"
+   }
+  ],
+  "queue": {
+   "enabled": true
+  },
+  "schedule": {
+   "pause_status": "UNPAUSED",
+   "quartz_cron_expression": "0 0 2,8,14,20 * * ?",
+   "timezone_id": "UTC"
+  },
+  "tags": {
+   "content": "own",
+   "project": "tiktok",
+   "stage": "production"
+  },
+  "tasks": [
+   {
+    "disabled": false,
+    "email_notifications": {},
+    "notebook_task": {
+     "base_parameters": {
+      "hashtags": "{{job.parameters.hashtags}}",
+      "llm_model": "deepseek/deepseek-v4-pro-0813",
+      "max_age_days": "30",
+      "max_charge_usd": "{{job.parameters.max_charge_usd}}",
+      "max_duration_sec": "60",
+      "min_likes": "{{job.parameters.min_likes}}",
+      "min_plays": "10000",
+      "results_per_hashtag": "{{job.parameters.results_per_hashtag}}",
+      "top_n": "{{job.parameters.top_n}}",
+      "usar_apify": "{{job.parameters.usar_apify}}"
+     },
+     "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/guiones_60s_viral",
+     "source": "WORKSPACE"
+    },
+    "run_if": "ALL_SUCCESS",
+    "task_key": "guiones_60s",
+    "timeout_seconds": 3600,
+    "webhook_notifications": {
+     "on_failure": [
+      {
+       "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8"
+      }
+     ],
+     "on_start": [
+      {
+       "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8"
+      }
+     ],
+     "on_success": [
+      {
+       "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8"
+      }
+     ]
+    }
+   },
+   {
+    "task_key": "seleccionar_guiones",
+    "description": "Fase serial: elige los guiones, disena las fichas del personaje y sortea los hashtags UNA vez para todo el lote, y deja el manifiesto que consume el for_each. Todo lo que depende del lote entero vive aqui porque dentro de N iteraciones aisladas no se puede mantener.",
+    "depends_on": [
+     {
+      "task_key": "guiones_60s"
+     }
+    ],
+    "environment_key": "video",
+    "notebook_task": {
+     "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/seleccionar_guiones",
+     "base_parameters": {
+      "cantidad": "{{job.parameters.cantidad}}",
+      "video_fuente_id": "{{job.parameters.video_fuente_id}}",
+      "excluir_ids": "{{job.parameters.excluir_ids}}",
+      "regenerar_ids": "{{job.parameters.regenerar_ids}}",
+      "personaje": "{{job.parameters.personaje}}",
+      "llm_model": "{{job.parameters.llm_model}}",
+      "temas_hashtags": "{{job.parameters.hashtags}}",
+      "n_hashtags": "{{job.parameters.n_hashtags}}",
+      "voz": "{{job.parameters.voz}}",
+      "rate": "{{job.parameters.rate}}",
+      "marca_usuario": "{{job.parameters.marca_usuario}}",
+      "reusar_personaje": "{{job.parameters.reusar_personaje}}",
+      "sufijo": "{{job.parameters.sufijo}}",
+      "desde_historial": "{{job.parameters.desde_historial}}"
+     }
+    },
+    "webhook_notifications": {
+     "on_start": [
+      {
+       "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8"
+      }
+     ],
+     "on_success": [
+      {
+       "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8"
+      }
+     ],
+     "on_failure": [
+      {
+       "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8"
+      }
+     ]
+    },
+    "timeout_seconds": 900
+   },
+   {
+    "depends_on": [
+     {
+      "task_key": "seleccionar_guiones"
+     }
+    ],
+    "disabled": false,
+    "email_notifications": {},
+    "run_if": "ALL_SUCCESS",
+    "task_key": "generar_video",
+    "timeout_seconds": 7200,
+    "webhook_notifications": {
+     "on_failure": [
+      {
+       "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8"
+      }
+     ],
+     "on_start": [
+      {
+       "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8"
+      }
+     ],
+     "on_success": [
+      {
+       "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8"
+      }
+     ]
+    },
+    "description": "for_each_task: una iteracion por guion, hasta concurrency a la vez. Cada iteracion tiene su propio compute, que es lo que paraleliza de verdad (el render es CPU puro: Pillow + dos encodes x264).",
+    "for_each_task": {
+     "inputs": "{{tasks.seleccionar_guiones.values.ids}}",
+     "concurrency": 3,
+     "task": {
+      "task_key": "render_video",
+      "max_retries": 1,
+      "environment_key": "video",
+      "notebook_task": {
+       "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/render_video_lote",
+       "base_parameters": {
+        "manifiesto": "{{tasks.seleccionar_guiones.values.manifiesto}}",
+        "video_fuente_id": "{{input.video_fuente_id}}",
+        "dry_run": "{{job.parameters.dry_run}}"
+       }
+      },
+      "webhook_notifications": {
+       "on_failure": [
+        {
+         "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8"
+        }
+       ]
+      },
+      "timeout_seconds": 2400
+     }
+    }
+   },
+   {
+    "task_key": "empaquetar",
+    "description": "Escribe el descripciones_reels.md del lote. Va aqui y no en el render porque ese archivo es UNO por lote y se sobrescribe: si lo escribiera cada iteracion paralela, la ultima en terminar ganaria y solo documentaria su video.",
+    "depends_on": [
+     {
+      "task_key": "generar_video"
+     }
+    ],
+    "run_if": "ALL_DONE",
+    "environment_key": "publish",
+    "notebook_task": {
+     "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/empaquetar_lote",
+     "base_parameters": {
+      "manifiesto": "{{tasks.seleccionar_guiones.values.manifiesto}}"
+     }
+    },
+    "webhook_notifications": {
+     "on_failure": [
+      {
+       "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8"
+      }
+     ]
+    },
+    "timeout_seconds": 900
+   },
+   {
+    "depends_on": [
+     {
+      "task_key": "generar_video"
+     }
+    ],
+    "disabled": false,
+    "email_notifications": {},
+    "environment_key": "publish",
+    "notebook_task": {
+     "base_parameters": {
+      "max_pendientes": "{{job.parameters.max_pendientes}}"
+     },
+     "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/pendientes_borradores",
+     "source": "WORKSPACE"
+    },
+    "run_if": "ALL_DONE",
+    "task_key": "listar_pendientes",
+    "timeout_seconds": 900
+   },
+   {
+    "depends_on": [
+     {
+      "task_key": "listar_pendientes"
+     }
+    ],
+    "disabled": false,
+    "email_notifications": {},
+    "for_each_task": {
+     "inputs": "{{tasks.listar_pendientes.values.videos}}",
+     "task": {
+      "disabled": false,
+      "email_notifications": {},
+      "environment_key": "publish",
+      "max_retries": 3,
+      "min_retry_interval_millis": 120000,
+      "notebook_task": {
+       "base_parameters": {
+        "allow_resubmit": "{{job.parameters.allow_resubmit}}",
+        "dry_run": "false",
+        "own_videos": "{{input.video_name}}",
+        "video_path": "{{input.video_name}}"
+       },
+       "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/upload_draft_video",
+       "source": "WORKSPACE"
+      },
+      "retry_on_timeout": false,
+      "run_if": "ALL_SUCCESS",
+      "task_key": "subir_borrador",
+      "timeout_seconds": 1500
+     }
+    },
+    "run_if": "ALL_DONE",
+    "task_key": "subir_borradores",
+    "timeout_seconds": 0,
+    "webhook_notifications": {
+     "on_failure": [
+      {
+       "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8"
+      }
+     ],
+     "on_start": [
+      {
+       "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8"
+      }
+     ],
+     "on_success": [
+      {
+       "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8"
+      }
+     ]
+    }
+   },
+   {
+    "depends_on": [
+     {
+      "task_key": "generar_video"
+     }
+    ],
+    "disabled": false,
+    "email_notifications": {},
+    "for_each_task": {
+     "inputs": "{{tasks.seleccionar_guiones.values.videos}}",
+     "task": {
+      "disabled": false,
+      "email_notifications": {},
+      "environment_key": "publish",
+      "notebook_task": {
+       "base_parameters": {
+        "privacy": "private",
+        "video_name": "{{input.video_name}}"
+       },
+       "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/publicar_youtube",
+       "source": "WORKSPACE"
+      },
+      "run_if": "ALL_SUCCESS",
+      "task_key": "publicar_youtube_item",
+      "timeout_seconds": 1500
+     }
+    },
+    "run_if": "ALL_DONE",
+    "task_key": "publicar_youtube",
+    "timeout_seconds": 0
+   },
+   {
+    "depends_on": [
+     {
+      "task_key": "generar_video"
+     }
+    ],
+    "disabled": false,
+    "email_notifications": {},
+    "for_each_task": {
+     "inputs": "{{tasks.seleccionar_guiones.values.videos}}",
+     "task": {
+      "disabled": false,
+      "email_notifications": {},
+      "environment_key": "publish",
+      "notebook_task": {
+       "base_parameters": {
+        "publicar": "true",
+        "video_name": "{{input.video_name}}"
+       },
+       "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/publicar_facebook",
+       "source": "WORKSPACE"
+      },
+      "run_if": "ALL_SUCCESS",
+      "task_key": "publicar_facebook_item",
+      "timeout_seconds": 1500
+     }
+    },
+    "run_if": "ALL_DONE",
+    "task_key": "publicar_facebook",
+    "timeout_seconds": 0
+   },
+   {
+    "depends_on": [
+     {
+      "task_key": "subir_borradores"
+     },
+     {
+      "task_key": "publicar_youtube"
+     },
+     {
+      "task_key": "publicar_facebook"
+     }
+    ],
+    "disabled": false,
+    "email_notifications": {},
+    "environment_key": "publish",
+    "notebook_task": {
+     "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/cerrar_distribucion",
+     "source": "WORKSPACE"
+    },
+    "run_if": "ALL_DONE",
+    "task_key": "cerrar_distribucion",
+    "timeout_seconds": 900
+   }
+  ],
+  "timeout_seconds": 0,
+  "webhook_notifications": {
+   "on_duration_warning_threshold_exceeded": [
+    {
+     "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8"
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,21 @@
+{
+  "run_name": "probe_direct_post",
+  "tasks": [
+    {
+      "task_key": "probe",
+      "environment_key": "default",
+      "notebook_task": {
+        "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/probe_direct_post"
+      },
+      "timeout_seconds": 900
+    }
+  ],
+  "environments": [
+    {
+      "environment_key": "default",
+      "spec": {
+        "client": "2"
+      }
+    }
+  ]
+}

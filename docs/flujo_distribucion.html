@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Distribución multicanal TikTok</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Neutros con sesgo verde-azulado, semánticos separados del acento.
+   Tipografía técnica: Plex Sans para prosa, Plex Mono para identificadores. */
+:root {
+  --bg: #f6f8f8;
+  --surface: #ffffff;
+  --surface-2: #eef3f2;
+  --fg: #131a1b;
+  --muted: #5b6b6c;
+  --line: #dce5e4;
+  --line-strong: #c3d1cf;
+  --accent: #1d6f66;
+  --accent-soft: #e2efec;
+  --ok: #2c7a4d;
+  --ok-soft: #e3f2e8;
+  --warn: #8a5a10;
+  --warn-soft: #f8eed8;
+  --bad: #9c3737;
+  --bad-soft: #fae4e4;
+  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
+  --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --radius: 10px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1415;
+    --surface: #171e1f;
+    --surface-2: #1d2728;
+    --fg: #e7efee;
+    --muted: #93a4a5;
+    --line: #263232;
+    --line-strong: #354544;
+    --accent: #63c1b0;
+    --accent-soft: #16302d;
+    --ok: #6cc78f;
+    --ok-soft: #152b20;
+    --warn: #d9a755;
+    --warn-soft: #2e2415;
+    --bad: #e28a8a;
+    --bad-soft: #301b1b;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1415;
+  --surface: #171e1f;
+  --surface-2: #1d2728;
+  --fg: #e7efee;
+  --muted: #93a4a5;
+  --line: #263232;
+  --line-strong: #354544;
+  --accent: #63c1b0;
+  --accent-soft: #16302d;
+  --ok: #6cc78f;
+  --ok-soft: #152b20;
+  --warn: #d9a755;
+  --warn-soft: #2e2415;
+  --bad: #e28a8a;
+  --bad-soft: #301b1b;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { max-width: 960px; margin: 0 auto; padding-block: 40px 72px; }
+
+header.page { padding-block: 0 28px; border-bottom: 1px solid var(--line); }
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 10px;
+}
+h1 {
+  font-size: clamp(28px, 5vw, 40px);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+  margin: 0 0 12px;
+  text-wrap: balance;
+}
+.lede { font-size: 17px; color: var(--muted); margin: 0; max-width: 62ch; }
+.jobref {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--muted);
+  margin: 18px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+}
+.jobref b { color: var(--fg); font-weight: 500; }
+
+h2 {
+  font-size: 13px;
+  font-family: var(--mono);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 500;
+  margin: 44px 0 16px;
+}
+h3 { font-size: 17px; font-weight: 600; margin: 0 0 4px; letter-spacing: -0.01em; }
+
+.tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.tile {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  min-width: 0;
+}
+.tile .canal {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 8px;
+}
+.tile .valor { font-size: 15px; font-weight: 600; line-height: 1.3; }
+.tile .nota { font-size: 12.5px; color: var(--muted); margin: 4px 0 0; }
+
+.chip {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.chip.activo { background: var(--ok-soft); color: var(--ok); }
+.chip.pendiente { background: var(--warn-soft); color: var(--warn); }
+.chip.bloqueado { background: var(--bad-soft); color: var(--bad); }
+.chip.manual { background: var(--accent-soft); color: var(--accent); }
+
+.dag { list-style: none; margin: 0; padding: 0; }
+.step { position: relative; padding: 0 0 22px 46px; }
+.step:last-child { padding-bottom: 0; }
+.step::before {
+  content: "";
+  position: absolute;
+  left: 13px; top: 30px; bottom: -2px;
+  width: 1px;
+  background: var(--line-strong);
+}
+.step:last-child::before { display: none; }
+.num {
+  position: absolute;
+  left: 0; top: 0;
+  width: 27px; height: 27px;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 12px;
+  display: grid;
+  place-items: center;
+}
+.step.on .num { border-color: var(--accent); color: var(--accent); }
+.step.off .num { border-style: dashed; }
+.cabecera-paso { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 12px; }
+code, .mono { font-family: var(--mono); font-size: 0.88em; }
+.cabecera-paso code { color: var(--accent); font-weight: 500; }
+.desc { margin: 2px 0 10px; color: var(--muted); font-size: 15px; max-width: 66ch; }
+
+dl.datos { margin: 0; display: grid; grid-template-columns: 118px 1fr; gap: 6px 14px; font-size: 14px; }
+dl.datos dt { color: var(--muted); font-family: var(--mono); font-size: 12px; padding-top: 2px; }
+dl.datos dd { margin: 0; min-width: 0; }
+dl.datos dd code { word-break: break-word; }
+
+.nota-paso {
+  margin: 10px 0 0;
+  font-size: 13.5px;
+  border-left: 2px solid var(--line-strong);
+  padding: 2px 0 2px 12px;
+  color: var(--muted);
+  max-width: 66ch;
+}
+.nota-paso strong { color: var(--fg); font-weight: 500; }
+.alerta { border-left-color: var(--bad); }
+.alerta strong { color: var(--bad); }
+.aviso { border-left-color: var(--warn); }
+.aviso strong { color: var(--warn); }
+
+.scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 14px; min-width: 620px; }
+th, td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 500;
+  background: var(--surface-2);
+}
+tbody tr:last-child td { border-bottom: 0; }
+td code { color: var(--accent); }
+
+pre {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  overflow-x: auto;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 1.7;
+  margin: 10px 0 0;
+  color: var(--fg);
+}
+pre .c { color: var(--muted); }
+
+ul.limpia { margin: 0; padding-left: 20px; display: grid; gap: 8px; font-size: 15px; }
+ul.limpia li::marker { color: var(--accent); }
+ul.limpia code { color: var(--accent); }
+
+footer.pie {
+  margin-top: 48px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  font-size: 12.5px;
+  color: var(--muted);
+  font-family: var(--mono);
+}
+
+@media (max-width: 760px) {
+  .tiles { grid-template-columns: repeat(2, 1fr); }
+  dl.datos { grid-template-columns: 1fr; gap: 2px; }
+  dl.datos dt { padding-top: 8px; }
+}
+@media (max-width: 420px) {
+  .tiles { grid-template-columns: 1fr; }
+  .step { padding-left: 38px; }
+  .step::before { left: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="page">
+  <p class="eyebrow">TikTok · producción diaria</p>
+  <h1>Cadena de distribución multicanal</h1>
+  <p class="lede">Siete pasos llevan un guion desde el scrapeo en TikTok hasta un video publicado en tres redes. Hoy funcionan cuatro; faltan tres para que la carga sea automática en YouTube y Facebook.</p>
+  <p class="jobref">
+    <span>job <b>tiktok_produccion_diaria</b></span>
+    <span>id <b>813880207704409</b></span>
+    <span>notebooks en <b>/tiktok_ingest</b></span>
+  </p>
+</header>
+
+<h2>Estado de un vistazo</h2>
+<div class="tiles">
+  <div class="tile">
+    <p class="canal">TikTok</p>
+    <p class="valor">Borrador al inbox</p>
+    <p class="nota">Se sube solo; publicar es manual en la app.</p>
+  </div>
+  <div class="tile">
+    <p class="canal">YouTube Shorts</p>
+    <p class="valor">Listo, desactivado</p>
+    <p class="nota">Notebook y OAuth cargados. Tarea desactivada.</p>
+  </div>
+  <div class="tile">
+    <p class="canal">Facebook Reels</p>
+    <p class="valor">Bloqueado</p>
+    <p class="nota">Faltan las 3 credenciales de página.</p>
+  </div>
+  <div class="tile">
+    <p class="canal">Resumen</p>
+    <p class="valor">Slack, un mensaje</p>
+    <p class="nota">Corre al final aunque un canal falle.</p>
+  </div>
+</div>
+
+<h2>Lo que corre hoy</h2>
+<ol class="dag">
+  <li class="step on">
+    <span class="num">1</span>
+    <div class="cabecera-paso">
+      <h3>Guiones</h3>
+      <span class="chip activo">activo</span>
+    </div>
+    <p class="desc">Scrapea TikTok con Apify por hashtags, filtra por idioma, antigüedad y likes, y pide a DeepSeek un guion de 60 segundos por video fuente.</p>
+    <dl class="datos">
+      <dt>notebook</dt><dd><code>guiones_60s_viral</code></dd>
+      <dt>escribe</dt><dd><code>tiktok.gold.guiones_60s</code> — 20 columnas, clave <code>video_fuente_id</code></dd>
+      <dt>tope</dt><dd><code>max_charge_usd</code> 0,5 USD por corrida</dd>
+    </dl>
+  </li>
+
+  <li class="step on">
+    <span class="num">2</span>
+    <div class="cabecera-paso">
+      <h3>Voz, personaje y render</h3>
+      <span class="chip activo">activo</span>
+    </div>
+    <p class="desc">Sintetiza la voz, diseña una ficha de personaje con el LLM, dibuja el escenario con Pillow, quema subtítulos y la marca del canal, y monta el mp4 con ffmpeg.</p>
+    <dl class="datos">
+      <dt>notebook</dt><dd><code>generar_video_guion</code></dd>
+      <dt>voz</dt><dd>edge-tts <code>es-MX-JorgeNeural</code> a +8 %, con tiempos por palabra</dd>
+      <dt>marca</dt><dd><code>@alguienqueteescucha</code> fija en (540, 1591), sobre la cintura del personaje</dd>
+      <dt>produce</dt><dd><code>motivacional_&lt;id&gt;.mp4</code> y su <code>_publicacion.txt</code></dd>
+      <dt>registra</dt><dd><code>guiones_usados</code>, <code>personajes_usados</code>, <code>hashtags_usados</code></dd>
+    </dl>
+    <p class="nota-paso"><strong>Cambio de hoy:</strong> la tabla de guiones ya no se sobrescribe. Antes cada corrida borraba los guiones viejos y con ellos la posibilidad de rehacer un video.</p>
+  </li>
+
+  <li class="step on">
+    <span class="num">3</span>
+    <div class="cabecera-paso">
+      <h3>Borrador a TikTok</h3>
+      <span class="chip activo">activo</span>
+      <span class="chip manual">publicar es manual</span>
+    </div>
+    <p class="desc">Una tarea por video que sube el mp4 al inbox de TikTok como borrador.</p>
+    <dl class="datos">
+      <dt>notebook</dt><dd><code>upload_draft_video</code></dd>
+      <dt>grano</dt><dd>idempotente por <code>video_name</code>; <code>allow_resubmit</code> controla los reintentos</dd>
+    </dl>
+    <p class="nota-paso alerta"><strong>Dos límites reales:</strong> la app de TikTok no está auditada, así que la publicación directa solo funciona en cuentas privadas; y el inbox tiene cupo, por lo que algunos videos quedan en <code>SKIPPED_INBOX_FULL</code>. Abrir la app y publicar los borradores sigue siendo un paso humano.</p>
+  </li>
+
+  <li class="step on">
+    <span class="num">4</span>
+    <div class="cabecera-paso">
+      <h3>Pendientes</h3>
+      <span class="chip activo">activo</span>
+    </div>
+    <p class="desc">Cuenta los borradores sin publicar para no acumular más de los que la app permite gestionar.</p>
+    <dl class="datos">
+      <dt>notebook</dt><dd><code>pendientes_borradores</code></dd>
+      <dt>condición</dt><dd><code>run_if: ALL_DONE</code> — corre aunque la subida haya fallado</dd>
+    </dl>
+  </li>
+</ol>
+
+<h2>Lo que falta para cerrar la automatización</h2>
+<ol class="dag">
+  <li class="step off">
+    <span class="num">5</span>
+    <div class="cabecera-paso">
+      <h3>YouTube Shorts</h3>
+      <span class="chip pendiente">desactivado</span>
+    </div>
+    <p class="desc">Sube el mp4 con <code>videos.insert</code> resumable y toma título y hashtags del <code>.txt</code> hermano, añadiendo <code>#Shorts</code>.</p>
+    <dl class="datos">
+      <dt>notebook</dt><dd><code>publicar_youtube</code> — ya existe en el workspace</dd>
+      <dt>credenciales</dt><dd><code>youtube_client_id</code>, <code>youtube_client_secret</code>, <code>youtube_refresh_token</code> — cargadas</dd>
+      <dt>privacidad</dt><dd><code>privacy=private</code> hasta validar; después se cambia a público</dd>
+    </dl>
+    <p class="nota-paso aviso"><strong>El techo es la cuota:</strong> 10 000 unidades al día y 1 600 por subida dejan 6 videos diarios. Al pasarse, el notebook marca <code>SKIPPED_CUOTA</code> y no reintenta, porque reintentar no devuelve cuota.</p>
+  </li>
+
+  <li class="step off">
+    <span class="num">6</span>
+    <div class="cabecera-paso">
+      <h3>Facebook Reels</h3>
+      <span class="chip bloqueado">sin credenciales</span>
+    </div>
+    <p class="desc">Sube el video en tres fases de la Graph API —inicio, envío binario y cierre— y lo deja publicado en la página.</p>
+    <dl class="datos">
+      <dt>notebook</dt><dd><code>publicar_facebook</code> — ya existe en el workspace</dd>
+      <dt>credenciales</dt><dd>faltan <code>fb_graph_version</code>, <code>fb_page_id</code>, <code>fb_page_access_token</code></dd>
+      <dt>ventaja</dt><dd>es el único canal que publica en público sin auditoría previa</dd>
+    </dl>
+    <p class="nota-paso"><strong>Es el bloqueo más corto de resolver:</strong> no hay que tocar código, solo guardar los tres secretos y quitar la desactivación de la tarea.</p>
+  </li>
+
+  <li class="step off">
+    <span class="num">7</span>
+    <div class="cabecera-paso">
+      <h3>Resumen de Slack</h3>
+      <span class="chip activo">listo</span>
+    </div>
+    <p class="desc">Lee lo que se publicó en la corrida y manda un solo mensaje con el estado de los tres canales, en vez de tres avisos sueltos.</p>
+    <dl class="datos">
+      <dt>notebook</dt><dd><code>cerrar_distribucion</code></dd>
+      <dt>fuente</dt><dd><code>tiktok.bronze.distribucion_video</code></dd>
+      <dt>condición</dt><dd><code>run_if: ALL_DONE</code>, para que un canal caído no oculte a los otros</dd>
+    </dl>
+  </li>
+</ol>
+
+<h2>Estado por canal, en una tabla</h2>
+<div class="scroll">
+<table>
+  <thead>
+    <tr><th>Canal</th><th>Notebook</th><th>Credenciales</th><th>Tarea en el job</th><th>Publica en público</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>TikTok</td>
+      <td><code>upload_draft_video</code></td>
+      <td>Completas</td>
+      <td>Activa</td>
+      <td>No: deja borrador, se publica a mano</td>
+    </tr>
+    <tr>
+      <td>YouTube</td>
+      <td><code>publicar_youtube</code></td>
+      <td>Completas</td>
+      <td>Desactivada</td>
+      <td>Sí, con <code>privacy</code> en público</td>
+    </tr>
+    <tr>
+      <td>Facebook</td>
+      <td><code>publicar_facebook</code></td>
+      <td>Faltan las 3</td>
+      <td>Desactivada</td>
+      <td>Sí, sin auditoría</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h2>Dónde queda el rastro</h2>
+<p class="desc">Una sola tabla concentra el resultado por canal. Se crea sola en la primera escritura y su grano es un video por canal, así que reintentar actualiza la fila en vez de duplicarla.</p>
+<div class="scroll">
+<table>
+  <thead>
+    <tr><th>Columna</th><th>Para qué sirve</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>video_name</code> + <code>canal</code></td><td>Clave: un registro por video y red</td></tr>
+    <tr><td><code>estado</code></td><td><code>PUBLICADO</code>, <code>PUBLICADO_PRIVADO</code>, <code>EN_CURSO</code>, <code>PENDIENTE</code>, <code>SKIPPED_CUOTA</code>, <code>SKIPPED_INBOX_FULL</code>, <code>FALLIDO</code></td></tr>
+    <tr><td><code>id_externo</code> · <code>url</code></td><td>Lo que devuelve cada API, para abrir el video publicado</td></tr>
+    <tr><td><code>motivo_fallo</code> · <code>intentos</code></td><td>Por qué falló y cuántas veces se reintentó</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>Para activar los canales que faltan</h2>
+<ul class="limpia">
+  <li><strong>Facebook:</strong> guarda los tres secretos con <code>--string-value</code> —por <code>stdin</code> se almacenan bytes y la lectura devuelve base64, que rompe la autenticación— y quita la desactivación de <code>publicar_facebook</code>.</li>
+  <li><strong>YouTube:</strong> haz una corrida de prueba con <code>privacy=private</code>, revisa el video en el canal y solo entonces cambia el parámetro a público.</li>
+  <li><strong>Cadencia:</strong> el job vive en <code>0 0 9 * * ?</code>, en pausa. La definición multicanal propone <code>0 0 0,4,8,12,16,20 * * ?</code> con un video por corrida: seis al día, justo el techo de la cuota de YouTube.</li>
+  <li><strong>Orden de aplicación:</strong> primero las credenciales, después el <code>jobs reset</code> con la definición multicanal, y al final despausar.</li>
+</ul>
+
+<pre><span class="c"># Facebook: los tres valores salen de la consola de Meta</span>
+databricks secrets put-secret tiktok_pipeline fb_graph_version --string-value "v21.0" --profile DEFAULT
+databricks secrets put-secret tiktok_pipeline fb_page_id --string-value "&lt;id de la pagina&gt;" --profile DEFAULT
+databricks secrets put-secret tiktok_pipeline fb_page_access_token --string-value "&lt;token de pagina&gt;" --profile DEFAULT
+
+<span class="c"># aplicar la definición con las tareas de YouTube y Facebook</span>
+databricks jobs reset --json @jobs/multicanal.reset.json --profile DEFAULT</pre>
+
+<footer class="pie">
+  Verificado contra el job vivo y los notebooks del workspace el 24 de octubre de 2026.
+</footer>
+
+</div>
+</body>
+</html>
