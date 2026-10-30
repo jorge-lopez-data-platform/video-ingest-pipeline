@@ -16,8 +16,8 @@ CRF = 20
 TOLERANCIA_DURACION = 3.0
 CODIGO_VALIDACION = 4
 
-# Fuente sans con escapes para el filtro de ffmpeg. Arial existe en Windows;
-# si falta, ffmpeg cae a su fuente por defecto sin romper el render.
+# Fuente sans con escapes para el filtro de ffmpeg. Es una ruta de Windows:
+# si el archivo no existe, ffmpeg falla (exit 8) en vez de usar otra fuente.
 _FUENTE = "C\\:/Windows/Fonts/arialbd.ttf"
 
 
@@ -172,6 +172,10 @@ def _normalizar_escena(escena: dict, duracion: float, indice: int, tmp: Path) ->
 
 def construir_video(audio: Path, subs: Path | None, escenas: list[dict], salida: Path) -> Path:
     """Concatena el b-roll con la voz normalizada y quema los subtítulos."""
+    # Validar antes de renderizar: un subtítulo ausente no debe costar todas las escenas.
+    if subs is not None and not Path(subs).is_file():
+        raise FileNotFoundError(f"No existe el archivo de subtítulos: {subs}")
+
     info_audio = common.probe(audio)
     duracion_audio = info_audio["duracion"]
     if not duracion_audio:
@@ -205,10 +209,6 @@ def construir_video(audio: Path, subs: Path | None, escenas: list[dict], salida:
             "-shortest",
         ]
         if subs is not None:
-            # Pedir subtítulos y no tenerlos no debe producir un video mudo
-            # de texto sin que nadie se entere.
-            if not Path(subs).is_file():
-                raise FileNotFoundError(f"No existe el archivo de subtítulos: {subs}")
             args += ["-vf", f"ass={_escapar_ruta_filtro(Path(subs).as_posix())}"]
         args += ["-y", str(salida)]
         common.run_ffmpeg(args)

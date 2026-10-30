@@ -71,7 +71,7 @@ def test_subs_ausente_es_error(tmp_path):
     v = tmp_path / "a.mp4"
     common.run_ffmpeg(["-f", "lavfi", "-i", "color=c=blue:s=1080x1920:d=2",
                        "-f", "lavfi", "-i", "sine=duration=2", "-shortest",
-                       "-c:v", "libx264", "-c:a", "aac", "-y", str(v)])
+                       "-c:v", "mpeg4", "-c:a", "aac", "-y", str(v)])
     with pytest.raises(FileNotFoundError):
         build_video.construir_video(v, tmp_path / "no_existe.ass",
                                     [{"ruta": None, "texto_overlay": "x"}], tmp_path / "o.mp4")
