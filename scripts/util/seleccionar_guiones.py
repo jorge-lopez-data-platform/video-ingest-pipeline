@@ -57,7 +57,7 @@ LIB = "/Volumes/tiktok/default/videos/lib"
 VIDEOS_DIR = "/Volumes/tiktok/default/videos"
 
 sys.path.insert(0, LIB)
-from scripts import seleccion  # noqa: E402
+from scripts.util import seleccion  # noqa: E402
 
 print("Librería importada desde", LIB)
 
@@ -111,8 +111,8 @@ modelo = dbutils.widgets.get("llm_model").strip()
 
 fichas = {}
 if personaje == "motivacional":
-    from scripts import personaje_llm
-    from scripts.personaje import spec_normalizada
+    from scripts.util import personaje_llm
+    from scripts.util.personaje import spec_normalizada
 
     fichas_previas, fichas_por_id = seleccion.cargar_fichas(spark)
     print(f"Fichas previas en el historial: {len(fichas_previas)}")
@@ -166,7 +166,7 @@ ht_por_guion = seleccion.sortear_para(spark, TEMAS, N_HASHTAGS, ids)
 
 # COMMAND ----------
 
-from scripts import titulos  # noqa: E402
+from scripts.util import titulos  # noqa: E402
 
 titulos_previos = titulos.cargar_historial(spark)
 print(f"Títulos en el historial: {len(titulos_previos)}")

@@ -14,7 +14,7 @@ from pathlib import Path
 
 import edge_tts
 
-from scripts import common
+from scripts.util import common
 
 VOZ_POR_DEFECTO = "es-MX-JorgeNeural"
 BLOQUES = ("hook", "open_loop", "bloque_1", "pattern_interrupt",

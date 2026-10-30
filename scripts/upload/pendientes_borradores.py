@@ -36,7 +36,7 @@ LIB = f"{VIDEOS_DIR}/lib"
 # Los renders nuevos se agrupan en AAAA/MM/DD; sin esta resolucion el notebook
 # solo ve la raiz y da por perdidos los videos de hoy.
 sys.path.insert(0, LIB)
-from scripts import rutas  # noqa: E402
+from scripts.util import rutas  # noqa: E402
 
 try:
     MAX_PENDIENTES = max(0, int(dbutils.widgets.get("max_pendientes") or 0))

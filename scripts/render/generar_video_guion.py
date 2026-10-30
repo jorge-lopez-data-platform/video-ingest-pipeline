@@ -65,8 +65,9 @@ TABLA_USADOS = "tiktok.gold.guiones_usados"
 TABLA_PERSONAJES = "tiktok.gold.personajes_usados"
 
 sys.path.insert(0, LIB)
-from scripts import jesucitos, subtitular, common, rutas, descripciones  # noqa: E402
-from scripts.tts import texto_del_guion  # noqa: E402
+from scripts.util import jesucitos, subtitular, common, rutas  # noqa: E402
+from scripts.ingest import descripciones
+from scripts.util.tts import texto_del_guion  # noqa: E402
 
 print("Librería importada desde", LIB)
 
@@ -203,9 +204,9 @@ for g in elegidos:
 
 from openai import OpenAI
 
-from scripts import personaje_llm
-from scripts.personaje import firma as personaje_firma
-from scripts.personaje import spec_normalizada
+from scripts.util import personaje_llm
+from scripts.util.personaje import firma as personaje_firma
+from scripts.util.personaje import spec_normalizada
 
 llm = None
 fichas_previas = []

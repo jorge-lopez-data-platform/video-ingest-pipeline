@@ -18,7 +18,7 @@ import random
 
 from PIL import Image, ImageDraw, ImageFilter
 
-from scripts.jesucitos import _degradado
+from scripts.util.jesucitos import _degradado
 
 ANCHO, ALTO = 1080, 1920
 

@@ -12,7 +12,7 @@
 
 $ErrorActionPreference = "Stop"
 
-$DestinationId = "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8"  # destination "TikTok Alerts"
+$DestinationId = "<SLACK_DESTINATION_ID>"  # destination "TikTok Alerts"
 $Profile       = "DEFAULT"
 $Host_         = "https://dbc-e83fc5f3-f80b.cloud.databricks.com"
 $BackupDir     = Join-Path $PSScriptRoot "backup_jobs_20261024"

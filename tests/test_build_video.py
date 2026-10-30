@@ -1,6 +1,7 @@
 import pytest
 
-from scripts import build_video, common
+from scripts.render import build_video
+from scripts.util import common
 
 
 def _video_sintetico(tmp_path, segundos=2, tam="1080x1920", con_audio=True):

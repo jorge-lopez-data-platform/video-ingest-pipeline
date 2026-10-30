@@ -2,7 +2,7 @@
 
 import json
 
-from scripts import titulos
+from scripts.util import titulos
 
 
 GUION = {

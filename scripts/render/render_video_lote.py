@@ -47,9 +47,9 @@ TABLA_PERSONAJES = "tiktok.gold.personajes_usados"
 TABLA_HASHTAGS = "tiktok.gold.hashtags_usados"
 
 sys.path.insert(0, LIB)
-from scripts import jesucitos, subtitular, common, rutas, titulos  # noqa: E402
-from scripts.personaje import firma as personaje_firma  # noqa: E402
-from scripts.tts import texto_del_guion  # noqa: E402
+from scripts.util import jesucitos, subtitular, common, rutas, titulos  # noqa: E402
+from scripts.util.personaje import firma as personaje_firma  # noqa: E402
+from scripts.util.tts import texto_del_guion  # noqa: E402
 
 print("Librería importada desde", LIB)
 

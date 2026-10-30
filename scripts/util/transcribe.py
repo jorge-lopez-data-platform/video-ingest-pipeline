@@ -12,7 +12,7 @@ import json
 import sys
 from pathlib import Path
 
-from scripts import common
+from scripts.util import common
 
 DESVIO_MAXIMO = 0.15
 CODIGO_DURACION_SOSPECHOSA = 3

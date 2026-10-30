@@ -1,6 +1,6 @@
 import pytest
 
-from scripts import pick_guion
+from scripts.util import pick_guion
 
 
 def test_descarta_confianza_media():

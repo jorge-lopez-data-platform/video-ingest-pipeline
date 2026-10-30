@@ -19,7 +19,7 @@ import math
 
 from PIL import Image, ImageDraw, ImageFilter
 
-from scripts.jesucitos import ALTO_PJ, ANCHO_PJ, ESCALA_PJ
+from scripts.util.jesucitos import ALTO_PJ, ANCHO_PJ, ESCALA_PJ
 
 # Ficha por defecto: la que se usa si el guion no tiene diseño asignado. Sirve
 # también como red de seguridad si el LLM devuelve un campo inválido.
@@ -114,7 +114,7 @@ def _aclarar(rgb: tuple[int, int, int], factor: float = 1.22) -> tuple[int, int,
 
 def spec_normalizada(spec: dict | None) -> dict:
     """Completa y valida la ficha: cualquier campo raro cae al valor por defecto."""
-    from scripts.escenarios import normalizar as normalizar_escenario
+    from scripts.util.escenarios import normalizar as normalizar_escenario
 
     s = dict(SPEC_DEFECTO)
     if spec:

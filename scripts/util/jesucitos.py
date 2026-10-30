@@ -24,7 +24,7 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFilter
 
-from scripts import common
+from scripts.util import common
 
 ANCHO, ALTO = 1080, 1920
 FPS = 30
@@ -198,7 +198,7 @@ def cargar_fondo(ruta: Path | None, escenario: str = "paraiso") -> Image.Image:
         if escenario == "paraiso":
             base = fondo_procedural()
         else:
-            from scripts import escenarios
+            from scripts.util import escenarios
             base = escenarios.dibujar(escenario)
     else:
         base = Image.open(ruta).convert("RGBA")
@@ -454,7 +454,7 @@ def dibujar_para(personaje: str, spec: dict | None = None):
     if personaje in ("", "jesucitos"):
         return dibujar_personaje
     if personaje == "motivacional":
-        from scripts import personaje as modulo
+        from scripts.util import personaje as modulo
         return lambda **params: modulo.dibujar(spec=spec, **params)
     raise ValueError(
         f"Personaje desconocido: {personaje!r}. Usa 'jesucitos' o 'motivacional'."
@@ -548,7 +548,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--out", default="voz/jesucitos.mp4")
     parser.add_argument("--personaje", default="jesucitos",
                         choices=["jesucitos", "motivacional"])
-    from scripts.escenarios import TODOS as ESCENARIOS_VALIDOS
+    from scripts.util.escenarios import TODOS as ESCENARIOS_VALIDOS
     parser.add_argument("--escenario", default="paraiso", choices=list(ESCENARIOS_VALIDOS),
                         help="fondo procedural cuando no se pasa --fondo")
     args = parser.parse_args(argv)

@@ -36,7 +36,7 @@ LIB = f"{VIDEOS_DIR}/lib"
 # Los renders nuevos viven en AAAA/MM/DD y los antiguos planos en la raíz: la
 # ruta se resuelve por nombre, nunca se concatena.
 sys.path.insert(0, LIB)
-from scripts import rutas  # noqa: E402
+from scripts.util import rutas  # noqa: E402
 
 SCOPE = "tiktok_pipeline"
 API = "https://open.tiktokapis.com/v2"

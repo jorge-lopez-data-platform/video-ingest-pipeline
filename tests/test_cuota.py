@@ -2,7 +2,7 @@
 
 from datetime import datetime, timedelta, timezone
 
-from scripts.cuota import (
+from scripts.util.cuota import (
     LIMITE_24H,
     cuantas_caben,
     hay_cupo,

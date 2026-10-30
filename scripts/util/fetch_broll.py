@@ -15,7 +15,7 @@ import re
 import sys
 from pathlib import Path
 
-from scripts import common
+from scripts.util import common
 
 PEXELS_API = "https://api.pexels.com/videos/search"
 OPENVERSE_API = "https://api.openverse.org/v1/images/"

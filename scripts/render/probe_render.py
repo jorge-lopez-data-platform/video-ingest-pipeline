@@ -21,7 +21,7 @@ VIDEOS_DIR = "/Volumes/tiktok/default/videos"
 FONDO = f"{VIDEOS_DIR}/assets/paraiso_ia.png"
 
 sys.path.insert(0, LIB)
-from scripts import common, jesucitos  # noqa: E402
+from scripts.util import common, jesucitos  # noqa: E402
 
 resultado = {}
 

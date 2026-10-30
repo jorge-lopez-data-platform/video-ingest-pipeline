@@ -1,4 +1,4 @@
-from scripts import transcribe
+from scripts.util import transcribe
 
 
 def test_agrupa_respetando_pausa():

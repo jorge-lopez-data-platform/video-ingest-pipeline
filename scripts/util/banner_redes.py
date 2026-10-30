@@ -35,7 +35,7 @@ RAIZ = Path(__file__).resolve().parent.parent
 if str(RAIZ) not in sys.path:
     sys.path.insert(0, str(RAIZ))
 
-from scripts.marca_logo import (  # noqa: E402
+from scripts.util.marca_logo import (  # noqa: E402
     CREMA,
     _fuente,
     _texto_espaciado,
@@ -197,7 +197,7 @@ def _fuente_que_cabe(texto: str, archivo: str, ancho: int, tam_max: int,
 
 def _fondo_escena(nombre: str, ancho: int, alto: int,
                   velo: int = 150, blur: float = 18) -> Image.Image:
-    from scripts import escenarios
+    from scripts.util import escenarios
 
     fondo = escenarios.dibujar(nombre, ancho, alto).convert("RGBA")
     if blur:

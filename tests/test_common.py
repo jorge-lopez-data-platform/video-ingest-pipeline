@@ -1,4 +1,4 @@
-from scripts import common
+from scripts.util import common
 
 
 def test_probe_lee_resolucion_y_audio(tmp_path):

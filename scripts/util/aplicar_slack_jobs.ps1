@@ -9,7 +9,7 @@
 
 $ErrorActionPreference = "Stop"
 
-$DestinationId = "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8"  # "TikTok Alerts" en Databricks
+$DestinationId = "<SLACK_DESTINATION_ID>"  # "TikTok Alerts" en Databricks
 $Profile       = "DEFAULT"
 $BackupDir     = Join-Path $PSScriptRoot "backup_jobs_20261024"
 

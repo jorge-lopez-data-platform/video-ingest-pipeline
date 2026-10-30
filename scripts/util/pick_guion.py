@@ -13,7 +13,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from scripts import common
+from scripts.util import common
 
 TABLA = "tiktok.gold.guiones_60s"
 CONFIANZA_REQUERIDA = "alta"

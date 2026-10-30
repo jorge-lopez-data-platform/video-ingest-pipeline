@@ -1,6 +1,6 @@
 import pytest
 
-from scripts import fetch_broll
+from scripts.util import fetch_broll
 
 
 def test_usa_local_antes_que_pexels(tmp_path, monkeypatch):

@@ -12,14 +12,12 @@ from pathlib import Path
 
 import pytest
 
-from slackbot.nombres import canonico as canonico_repo
-
 ROOT = Path(__file__).resolve().parent.parent
 MARCADOR = "# --- FIN FUNCIONES PURAS"
 
 
 def _cargar_notebook():
-    src = (ROOT / "registrar_publicacion.py").read_text(encoding="utf-8")
+    src = (ROOT / "scripts" / "upload" / "registrar_publicacion.py").read_text(encoding="utf-8")
     assert MARCADOR in src
     ns = {}
     exec(compile(src.split(MARCADOR)[0], "registrar_publicacion.py", "exec"), ns)
@@ -35,7 +33,10 @@ NOMBRES = [
 
 
 @pytest.mark.parametrize("nombre", NOMBRES)
-def test_canonico_igual_que_slackbot(nombre):
+def test_canonico_igual_que_modulo_productivo(nombre):
+    # El módulo importa pyspark a nivel de módulo: sin Spark este caso se salta.
+    pytest.importorskip("pyspark")
+    from scripts.upload.registrar_publicacion import canonico as canonico_repo
     assert NB["canonico"](nombre) == canonico_repo(nombre)
 
 
@@ -53,6 +54,8 @@ def _spark_regex(nombre):
 
 @pytest.mark.parametrize("nombre", NOMBRES)
 def test_regex_spark_equivale_a_canonico(nombre):
+    pytest.importorskip("pyspark")
+    from scripts.upload.registrar_publicacion import canonico as canonico_repo
     assert _spark_regex(nombre) == canonico_repo(nombre)
 
 
@@ -103,7 +106,7 @@ def test_formato_spark_es_la_traduccion_del_de_python():
 
 def test_la_clave_del_merge_y_la_deduplicacion_usan_la_misma_constante():
     """La clave no puede estar escrita dos veces a mano: divergirian."""
-    src = (ROOT / "registrar_publicacion.py").read_text(encoding="utf-8")
+    src = (ROOT / "scripts" / "upload" / "registrar_publicacion.py").read_text(encoding="utf-8")
     on = src.split("MERGE INTO")[1].split("WHEN MATCHED")[0]
     assert "CLAVE" in on
     assert "partitionBy(*CLAVE)" in src
@@ -120,7 +123,7 @@ def test_la_clave_es_exactamente_lo_que_dice_el_spec():
 def test_la_migracion_corre_fuera_del_if_de_alter():
     """Si el UPDATE/DELETE quedan dentro del `if`, un fallo a medias deja filas
     en NULL para siempre: la siguiente corrida ya no entra en el `if`."""
-    src = (ROOT / "registrar_publicacion.py").read_text(encoding="utf-8")
+    src = (ROOT / "scripts" / "upload" / "registrar_publicacion.py").read_text(encoding="utf-8")
     migracion = src.split("Migracion, idempotente")[1].split("createOrReplaceTempView")[0]
     # El UPDATE del NULL y el COUNT deben correr SIEMPRE (4 espacios).
     siempre = [l for l in migracion.splitlines()
@@ -138,13 +141,13 @@ def test_la_migracion_corre_fuera_del_if_de_alter():
 
 def test_la_migracion_borra_las_filas_viejas_de_tiktok():
     """El esquema viejo perdia los intentos de TikTok; esas filas se reconstruyen."""
-    src = (ROOT / "registrar_publicacion.py").read_text(encoding="utf-8")
+    src = (ROOT / "scripts" / "upload" / "registrar_publicacion.py").read_text(encoding="utf-8")
     assert "DELETE FROM {LOG} WHERE canal = 'tiktok' AND clave_intento = ''" in src
 
 
 def test_la_clave_no_depende_de_la_zona_horaria():
     """date_format depende de spark.sql.session.timeZone; unix_micros no."""
-    src = (ROOT / "registrar_publicacion.py").read_text(encoding="utf-8")
+    src = (ROOT / "scripts" / "upload" / "registrar_publicacion.py").read_text(encoding="utf-8")
     # La expresion completa que produce la clave de TikTok.
     expr = src.split("F.unix_micros")[0] if "F.unix_micros" in src else ""
     assert expr, "clave_intento ya no usa unix_micros"

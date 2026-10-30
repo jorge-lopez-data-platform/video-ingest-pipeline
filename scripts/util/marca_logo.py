@@ -109,7 +109,7 @@ def dibujar_personaje_badge(lado: int, color_disco=CREMA,
     capa del personaje trae un halo y, si se recorta en seco, ese halo queda
     como una niebla sucia alrededor de la cabeza.
     """
-    from scripts.personaje import SPEC_DEFECTO, dibujar
+    from scripts.util.personaje import SPEC_DEFECTO, dibujar
 
     # brazo=-1 levanta el brazo del lado izquierdo, como en la referencia.
     render = dibujar(0.20, 0.0, -1.0, 0.0, 0.0, SPEC_DEFECTO)

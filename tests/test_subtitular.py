@@ -4,7 +4,7 @@ El caso que motivó el archivo está en `test_no_parte_una_frase`: el agrupador
 genérico de transcribe.py producía "decides respirar. Así que cierra".
 """
 
-from scripts import subtitular
+from scripts.util import subtitular
 
 
 def _palabras(*textos, paso=0.4):
@@ -130,7 +130,7 @@ def test_marca_no_se_mueve():
 def test_marca_cae_en_la_cintura_centrada():
     """El punto es el borde camisa/pantalón del personaje, en el centro del frame."""
     x, y = subtitular.MARCA_PUNTO
-    from scripts import jesucitos
+    from scripts.util import jesucitos
 
     assert x == subtitular.ANCHO // 2
     # La cintura está entre el final de la camisa y el principio del pantalón:

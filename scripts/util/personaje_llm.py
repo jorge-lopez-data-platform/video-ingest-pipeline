@@ -19,8 +19,8 @@ import json
 import random
 import re
 
-from scripts.escenarios import TODOS as ESCENARIOS
-from scripts.personaje import (ACCESORIOS, EXPRESIONES, PELO_ESTILOS,
+from scripts.util.escenarios import TODOS as ESCENARIOS
+from scripts.util.personaje import (ACCESORIOS, EXPRESIONES, PELO_ESTILOS,
                                ROPA_TIPOS, SPEC_DEFECTO, firma,
                                spec_normalizada)
 

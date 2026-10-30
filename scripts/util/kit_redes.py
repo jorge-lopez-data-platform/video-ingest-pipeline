@@ -32,8 +32,8 @@ RAIZ = Path(__file__).resolve().parent.parent
 if str(RAIZ) not in sys.path:
     sys.path.insert(0, str(RAIZ))
 
-from scripts import marca_logo  # noqa: E402
-from scripts.marca_logo import (  # noqa: E402
+from scripts.util import marca_logo  # noqa: E402
+from scripts.util.marca_logo import (  # noqa: E402
     BUSTO_BOX,
     BUSTO_CENTRO,
     BUSTO_ZOOM,
@@ -77,7 +77,7 @@ def _fondo_escena(nombre: str, ancho: int, alto: int,
     El velo es lo que garantiza que el texto crema se lea sobre cualquier
     escena: sin él, una playa clara deja el titular sin contraste.
     """
-    from scripts import escenarios
+    from scripts.util import escenarios
 
     fondo = escenarios.dibujar(nombre, ancho, alto).convert("RGBA")
     if blur:
@@ -121,7 +121,7 @@ def _badge(lado: int, expresion: str = "calida", disco=CREMA,
     una mueca. La capa del personaje se compone sobre un lienzo opaco antes de
     recortar para que el halo no quede como niebla alrededor de la cabeza.
     """
-    from scripts.personaje import SPEC_DEFECTO, dibujar
+    from scripts.util.personaje import SPEC_DEFECTO, dibujar
 
     spec = dict(SPEC_DEFECTO)
     spec["expresion"] = expresion

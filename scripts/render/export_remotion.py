@@ -13,7 +13,7 @@ import json
 import sys
 from pathlib import Path
 
-from scripts import common
+from scripts.util import common
 
 BLOQUES = (
     "hook", "open_loop", "bloque_1", "pattern_interrupt",

@@ -8,7 +8,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-from scripts import common
+from scripts.util import common
 
 ANCHO, ALTO = 1080, 1920
 FPS = 30

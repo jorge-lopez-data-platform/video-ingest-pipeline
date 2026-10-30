@@ -2,3 +2,5 @@
 # Los notebooks se ejecutan en Databricks, donde pyspark y dbutils ya existen.
 requests>=2.31
 pytest>=8.0
+pillow>=10.0
+imageio-ffmpeg>=0.4

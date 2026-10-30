@@ -6,7 +6,7 @@ import wave
 
 import pytest
 
-from scripts import jesucitos
+from scripts.util import jesucitos
 
 
 def _audio_sintetico(ruta, patron):
