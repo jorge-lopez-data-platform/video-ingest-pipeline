@@ -22,7 +22,7 @@
             "results_per_hashtag": "10",
             "top_n": "10"
           },
-          "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/guiones_60s_viral",
+          "notebook_path": "/Users/USUARIO/tiktok_ingest/guiones_60s_viral",
           "source": "WORKSPACE"
         },
         "run_if": "ALL_SUCCESS",

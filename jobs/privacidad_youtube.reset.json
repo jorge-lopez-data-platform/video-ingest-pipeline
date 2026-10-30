@@ -150,29 +150,12 @@
             "top_n": "{{job.parameters.top_n}}",
             "usar_apify": "{{job.parameters.usar_apify}}"
           },
-          "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/guiones_60s_viral",
+          "notebook_path": "/Users/USUARIO/tiktok_ingest/guiones_60s_viral",
           "source": "WORKSPACE"
         },
         "run_if": "ALL_SUCCESS",
         "task_key": "guiones_60s",
-        "timeout_seconds": 3600,
-        "webhook_notifications": {
-          "on_failure": [
-            {
-              "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8"
-            }
-          ],
-          "on_start": [
-            {
-              "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8"
-            }
-          ],
-          "on_success": [
-            {
-              "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8"
-            }
-          ]
-        }
+        "timeout_seconds": 3600
       },
       {
         "depends_on": [
@@ -201,29 +184,12 @@
             "video_fuente_id": "{{job.parameters.video_fuente_id}}",
             "voz": "{{job.parameters.voz}}"
           },
-          "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/seleccionar_guiones",
+          "notebook_path": "/Users/USUARIO/tiktok_ingest/seleccionar_guiones",
           "source": "WORKSPACE"
         },
         "run_if": "ALL_SUCCESS",
         "task_key": "seleccionar_guiones",
-        "timeout_seconds": 900,
-        "webhook_notifications": {
-          "on_failure": [
-            {
-              "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8"
-            }
-          ],
-          "on_start": [
-            {
-              "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8"
-            }
-          ],
-          "on_success": [
-            {
-              "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8"
-            }
-          ]
-        }
+        "timeout_seconds": 900
       },
       {
         "depends_on": [
@@ -249,42 +215,18 @@
                 "id_lote": "{{input}}",
                 "manifiesto": "{{tasks.seleccionar_guiones.values.manifiesto}}"
               },
-              "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/render_video_lote",
+              "notebook_path": "/Users/USUARIO/tiktok_ingest/render_video_lote",
               "source": "WORKSPACE"
             },
             "retry_on_timeout": false,
             "run_if": "ALL_SUCCESS",
             "task_key": "render_video",
-            "timeout_seconds": 2400,
-            "webhook_notifications": {
-              "on_failure": [
-                {
-                  "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8"
-                }
-              ]
-            }
+            "timeout_seconds": 2400
           }
         },
         "run_if": "ALL_SUCCESS",
         "task_key": "generar_video",
-        "timeout_seconds": 0,
-        "webhook_notifications": {
-          "on_failure": [
-            {
-              "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8"
-            }
-          ],
-          "on_start": [
-            {
-              "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8"
-            }
-          ],
-          "on_success": [
-            {
-              "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8"
-            }
-          ]
-        }
+        "timeout_seconds": 0
       },
       {
         "depends_on": [
@@ -300,19 +242,12 @@
           "base_parameters": {
             "manifiesto": "{{tasks.seleccionar_guiones.values.manifiesto}}"
           },
-          "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/empaquetar_lote",
+          "notebook_path": "/Users/USUARIO/tiktok_ingest/empaquetar_lote",
           "source": "WORKSPACE"
         },
         "run_if": "ALL_DONE",
         "task_key": "empaquetar",
-        "timeout_seconds": 900,
-        "webhook_notifications": {
-          "on_failure": [
-            {
-              "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8"
-            }
-          ]
-        }
+        "timeout_seconds": 900
       },
       {
         "depends_on": [
@@ -327,7 +262,7 @@
           "base_parameters": {
             "max_pendientes": "{{job.parameters.max_pendientes}}"
           },
-          "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/pendientes_borradores",
+          "notebook_path": "/Users/USUARIO/tiktok_ingest/pendientes_borradores",
           "source": "WORKSPACE"
         },
         "run_if": "ALL_DONE",
@@ -356,7 +291,7 @@
                 "own_videos": "{{input.video_name}}",
                 "video_path": "{{input.video_name}}"
               },
-              "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/upload_draft_video",
+              "notebook_path": "/Users/USUARIO/tiktok_ingest/upload_draft_video",
               "source": "WORKSPACE"
             },
             "run_if": "ALL_SUCCESS",
@@ -366,24 +301,7 @@
         },
         "run_if": "ALL_DONE",
         "task_key": "subir_borradores",
-        "timeout_seconds": 0,
-        "webhook_notifications": {
-          "on_failure": [
-            {
-              "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8"
-            }
-          ],
-          "on_start": [
-            {
-              "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8"
-            }
-          ],
-          "on_success": [
-            {
-              "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8"
-            }
-          ]
-        }
+        "timeout_seconds": 0
       },
       {
         "depends_on": [
@@ -404,7 +322,7 @@
                 "privacy": "{{job.parameters.youtube_privacy}}",
                 "video_name": "{{input}}"
               },
-              "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/publicar_youtube",
+              "notebook_path": "/Users/USUARIO/tiktok_ingest/publicar_youtube",
               "source": "WORKSPACE"
             },
             "run_if": "ALL_SUCCESS",
@@ -435,7 +353,7 @@
                 "publicar": "true",
                 "video_name": "{{input}}"
               },
-              "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/publicar_facebook",
+              "notebook_path": "/Users/USUARIO/tiktok_ingest/publicar_facebook",
               "source": "WORKSPACE"
             },
             "run_if": "ALL_SUCCESS",
@@ -467,7 +385,7 @@
                 "publicar": "true",
                 "video_name": "{{input}}"
               },
-              "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/publicar_tiktok_directo",
+              "notebook_path": "/Users/USUARIO/tiktok_ingest/publicar_tiktok_directo",
               "source": "WORKSPACE"
             },
             "run_if": "ALL_SUCCESS",
@@ -498,7 +416,7 @@
         "email_notifications": {},
         "environment_key": "publish",
         "notebook_task": {
-          "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/cerrar_distribucion",
+          "notebook_path": "/Users/USUARIO/tiktok_ingest/cerrar_distribucion",
           "source": "WORKSPACE"
         },
         "run_if": "ALL_DONE",
@@ -506,13 +424,6 @@
         "timeout_seconds": 900
       }
     ],
-    "timeout_seconds": 0,
-    "webhook_notifications": {
-      "on_duration_warning_threshold_exceeded": [
-        {
-          "id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8"
-        }
-      ]
-    }
+    "timeout_seconds": 0
   }
 }

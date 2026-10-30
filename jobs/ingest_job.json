@@ -11,7 +11,7 @@
     {
       "task_key": "ingest_tiktok",
       "notebook_task": {
-        "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/ingest_tiktok",
+        "notebook_path": "/Users/USUARIO/tiktok_ingest/ingest_tiktok",
         "base_parameters": {
           "hashtags": "databricks,dataengineering,datascience,sql,bigdata",
           "results_per_hashtag": "100",

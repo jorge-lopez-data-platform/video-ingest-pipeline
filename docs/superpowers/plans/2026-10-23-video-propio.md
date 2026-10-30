@@ -442,7 +442,7 @@ git commit -m "docs: flujo de produccion de video y primer render revisado"
 
 - [ ] **Step 1: Verificar que el notebook arreglado está en el workspace**
 
-Run: `MSYS_NO_PATHCONV=1 databricks workspace import "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/upload_own_video" --file "C:/Users/lopee/tiktok-pipeline/upload_own_video.py" --format SOURCE --language PYTHON --overwrite --profile DEFAULT`
+Run: `MSYS_NO_PATHCONV=1 databricks workspace import "/Users/USUARIO/tiktok_ingest/upload_own_video" --file "C:/Users/lopee/tiktok-pipeline/upload_own_video.py" --format SOURCE --language PYTHON --overwrite --profile DEFAULT`
 Expected: sin salida; luego `databricks workspace export` y `diff` contra el local da idénticos.
 
 - [ ] **Step 2: Subir el mp4 al volumen**

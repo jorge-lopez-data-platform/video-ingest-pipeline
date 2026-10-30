@@ -23,7 +23,7 @@
             "results_per_hashtag": "100",
             "run_timeout_secs": "900"
           },
-          "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/ingest_tiktok",
+          "notebook_path": "/Users/USUARIO/tiktok_ingest/ingest_tiktok",
           "source": "WORKSPACE"
         },
         "run_if": "ALL_SUCCESS",

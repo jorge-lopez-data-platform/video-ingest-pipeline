@@ -20,7 +20,7 @@ import os
 import sys
 from pathlib import Path
 
-WORKSPACE = "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest"
+WORKSPACE = "/Users/USUARIO/tiktok_ingest"
 SALIDA = Path(__file__).resolve().parent / "multicanal.job.json"
 
 # Solo estas claves del job vivo se descartan; el resto las conserva la API.

@@ -36,7 +36,7 @@ SALIDA = BASE / "reparo_tiktok.reset.json"
 
 NOMBRE_TASK_DIRECTO = "publicar_tiktok_directo"
 RUTA_NOTEBOOK_DIRECTO = (
-    "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/publicar_tiktok_directo"
+    "/Users/USUARIO/tiktok_ingest/publicar_tiktok_directo"
 )
 
 

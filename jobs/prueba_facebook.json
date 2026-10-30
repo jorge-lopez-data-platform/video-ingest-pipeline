@@ -5,7 +5,7 @@
       "task_key": "publicar_facebook",
       "environment_key": "publish",
       "notebook_task": {
-        "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/publicar_facebook",
+        "notebook_path": "/Users/USUARIO/tiktok_ingest/publicar_facebook",
         "source": "WORKSPACE",
         "base_parameters": {
           "video_name": "motivacional_7694828473117871361_v2.mp4",

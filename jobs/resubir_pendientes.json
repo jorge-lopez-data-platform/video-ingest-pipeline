@@ -9,7 +9,7 @@
           "task_key": "subir_borrador",
           "environment_key": "publish",
           "notebook_task": {
-            "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/upload_draft_video",
+            "notebook_path": "/Users/USUARIO/tiktok_ingest/upload_draft_video",
             "source": "WORKSPACE",
             "base_parameters": {
               "video_path": "{{input.video_name}}",

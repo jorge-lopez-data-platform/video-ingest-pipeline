@@ -98,7 +98,7 @@
             "results_per_hashtag": "{{job.parameters.results_per_hashtag}}",
             "top_n": "{{job.parameters.top_n}}"
           },
-          "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/guiones_60s_viral",
+          "notebook_path": "/Users/USUARIO/tiktok_ingest/guiones_60s_viral",
           "source": "WORKSPACE"
         },
         "run_if": "ALL_SUCCESS",
@@ -124,7 +124,7 @@
             "video_fuente_id": "{{job.parameters.video_fuente_id}}",
             "voz": "{{job.parameters.voz}}"
           },
-          "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/generar_video_guion",
+          "notebook_path": "/Users/USUARIO/tiktok_ingest/generar_video_guion",
           "source": "WORKSPACE"
         },
         "run_if": "ALL_SUCCESS",
@@ -154,7 +154,7 @@
                 "own_videos": "{{input.video_name}}",
                 "video_path": "{{input.video_name}}"
               },
-              "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/upload_draft_video",
+              "notebook_path": "/Users/USUARIO/tiktok_ingest/upload_draft_video",
               "source": "WORKSPACE"
             },
             "retry_on_timeout": false,

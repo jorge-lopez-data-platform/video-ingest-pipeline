@@ -26,7 +26,7 @@ https://developers.tiktok.com/app/7699559281800005639/ (app Lomasviral)
    **Comprueba que la lista incluya `video.publish`.** Copia el código (no lo pegues en chats).
 
 ## 3. Cambiar el código por tokens (notebook `oauth_tiktok`)
-En Databricks abre `/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/oauth_tiktok` y ejecútalo con:
+En Databricks abre `/Users/USUARIO/tiktok_ingest/oauth_tiktok` y ejecútalo con:
 - `mode` = `exchange`
 - `code` = el código copiado
 - `redirect_uri` = el valor por defecto (`https://mck2775.github.io/lomasviral/callback.html`)

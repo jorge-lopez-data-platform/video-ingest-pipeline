@@ -60,7 +60,7 @@
         "email_notifications": {},
         "environment_key": "download_own_video_environment",
         "notebook_task": {
-          "notebook_path": "/Workspace/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/download_own_video",
+          "notebook_path": "/Workspace/Users/USUARIO/tiktok_ingest/download_own_video",
           "source": "WORKSPACE"
         },
         "run_if": "ALL_SUCCESS",

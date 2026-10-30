@@ -5,10 +5,10 @@
     "email_notifications": {
       "no_alert_for_skipped_runs": true,
       "on_duration_warning_threshold_exceeded": [
-        "lopezechagarayjorge@gmail.com"
+        "USUARIO"
       ],
       "on_failure": [
-        "lopezechagarayjorge@gmail.com"
+        "USUARIO"
       ]
     },
     "environments": [
@@ -70,7 +70,7 @@
             "own_videos": "{{job.parameters.own_videos}}",
             "video_path": "{{job.parameters.video_path}}"
           },
-          "notebook_path": "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest/upload_draft_video",
+          "notebook_path": "/Users/USUARIO/tiktok_ingest/upload_draft_video",
           "source": "WORKSPACE"
         },
         "retry_on_timeout": false,

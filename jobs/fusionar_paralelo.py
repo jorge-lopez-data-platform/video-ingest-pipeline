@@ -23,8 +23,8 @@ JOB_ID = 813880207704409
 PERFIL = "DEFAULT"
 SALIDA = RAIZ / "job_produccion_paralelo.json"
 
-NB = "/Users/lopezechagarayjorge@gmail.com/tiktok_ingest"
-SLACK = [{"id": "477cffb7-1b7c-4893-b0ca-ab7bbaf989d8"}]
+NB = "/Users/USUARIO/tiktok_ingest"
+SLACK = [{"id": "<SLACK_DESTINATION_ID>"}]
 
 # El job se lee en cada ejecucion. `--profile` explicito siempre: nunca se
 # deja que el CLI elija por su cuenta.
