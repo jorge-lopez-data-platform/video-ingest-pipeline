@@ -114,12 +114,12 @@ actor lanza excepción en lugar de dejar el job en verde con cero datos.
 de guiones virales, y los distribuye así:
 
 ```
-guiones_60s ──► generar_video ──┬──► subir_borradores ──────────────────────┐
-                                ├──► publicar_youtube ──────────────────────┤
-                                └──► publicar_facebook ─────────────────────┤
-                                                                            ▼
-                                                                    cerrar_distribucion
+guiones_60s ──► generar_video ──► publicar_facebook ──► publicar_youtube ──► subir_borradores ──► cerrar_distribucion
 ```
+
+Cada tarea depende de la anterior con `run_if: ALL_SUCCESS`. Si una falla, las siguientes
+no se ejecutan y el job termina en error. Así no se publica ni se sube nada a partir de un
+video que no se generó bien.
 
 | Tarea | Función |
 |---|---|

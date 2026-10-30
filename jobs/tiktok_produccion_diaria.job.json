@@ -215,14 +215,14 @@
             "timeout_seconds": 1500
           }
         },
-        "run_if": "ALL_DONE",
+        "run_if": "ALL_SUCCESS",
         "task_key": "publicar_facebook",
         "timeout_seconds": 0
       },
       {
         "depends_on": [
           {
-            "task_key": "generar_video"
+            "task_key": "publicar_facebook"
           }
         ],
         "disabled": false,
@@ -246,14 +246,14 @@
             "timeout_seconds": 1500
           }
         },
-        "run_if": "ALL_DONE",
+        "run_if": "ALL_SUCCESS",
         "task_key": "publicar_youtube",
         "timeout_seconds": 0
       },
       {
         "depends_on": [
           {
-            "task_key": "generar_video"
+            "task_key": "publicar_youtube"
           }
         ],
         "disabled": false,
@@ -275,12 +275,6 @@
         "depends_on": [
           {
             "task_key": "subir_borradores"
-          },
-          {
-            "task_key": "publicar_youtube"
-          },
-          {
-            "task_key": "publicar_facebook"
           }
         ],
         "disabled": false,
@@ -290,7 +284,7 @@
           "notebook_path": "/Workspace/Users/USUARIO/tiktok_ingest/cerrar_distribucion",
           "source": "WORKSPACE"
         },
-        "run_if": "ALL_DONE",
+        "run_if": "ALL_SUCCESS",
         "task_key": "cerrar_distribucion",
         "timeout_seconds": 900
       }
