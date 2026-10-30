@@ -34,7 +34,7 @@
         "name": "allow_resubmit"
       },
       {
-        "default": "3",
+        "default": "2",
         "name": "cantidad"
       },
       {
@@ -50,7 +50,7 @@
         "name": "llm_model"
       },
       {
-        "default": "@tu_cuenta",
+        "default": "@alguienqueteescucha",
         "name": "marca_usuario"
       },
       {
@@ -196,26 +196,6 @@
         ],
         "disabled": false,
         "email_notifications": {},
-        "environment_key": "publish",
-        "notebook_task": {
-          "base_parameters": {
-            "max_pendientes": "{{job.parameters.max_pendientes}}"
-          },
-          "notebook_path": "/Workspace/Users/USUARIO/tiktok_ingest/pendientes_borradores",
-          "source": "WORKSPACE"
-        },
-        "run_if": "ALL_DONE",
-        "task_key": "listar_pendientes",
-        "timeout_seconds": 900
-      },
-      {
-        "depends_on": [
-          {
-            "task_key": "generar_video"
-          }
-        ],
-        "disabled": false,
-        "email_notifications": {},
         "for_each_task": {
           "inputs": "{{tasks.generar_video.values.videos}}",
           "task": {
@@ -255,7 +235,7 @@
             "environment_key": "publish",
             "notebook_task": {
               "base_parameters": {
-                "privacy": "private",
+                "privacy": "public",
                 "video_name": "{{input.video_name}}"
               },
               "notebook_path": "/Users/USUARIO/tiktok_ingest/publicar_youtube",
@@ -273,38 +253,23 @@
       {
         "depends_on": [
           {
-            "task_key": "listar_pendientes"
+            "task_key": "generar_video"
           }
         ],
         "disabled": false,
         "email_notifications": {},
-        "for_each_task": {
-          "inputs": "{{tasks.listar_pendientes.values.videos}}",
-          "task": {
-            "disabled": false,
-            "email_notifications": {},
-            "environment_key": "publish",
-            "max_retries": 3,
-            "min_retry_interval_millis": 120000,
-            "notebook_task": {
-              "base_parameters": {
-                "allow_resubmit": "{{job.parameters.allow_resubmit}}",
-                "dry_run": "false",
-                "own_videos": "{{input.video_name}}",
-                "video_path": "{{input.video_name}}"
-              },
-              "notebook_path": "/Users/USUARIO/tiktok_ingest/upload_draft_video",
-              "source": "WORKSPACE"
-            },
-            "retry_on_timeout": false,
-            "run_if": "ALL_SUCCESS",
-            "task_key": "subir_borrador",
-            "timeout_seconds": 1500
-          }
+        "environment_key": "publish",
+        "notebook_task": {
+          "base_parameters": {
+            "allow_resubmit": "{{job.parameters.allow_resubmit}}",
+            "max_pendientes": "{{job.parameters.max_pendientes}}"
+          },
+          "notebook_path": "/Workspace/Users/USUARIO/tiktok_ingest/subir_cola",
+          "source": "WORKSPACE"
         },
-        "run_if": "ALL_DONE",
+        "run_if": "ALL_SUCCESS",
         "task_key": "subir_borradores",
-        "timeout_seconds": 0
+        "timeout_seconds": 5400
       },
       {
         "depends_on": [
@@ -335,15 +300,8 @@
       {
         "pause_status": "UNPAUSED",
         "schedule": {
-          "quartz_cron_expression": "0 0 2,8,14,20 * * ?",
-          "timezone_id": "UTC"
-        }
-      },
-      {
-        "pause_status": "UNPAUSED",
-        "periodic": {
-          "interval": 4,
-          "unit": "HOURS"
+          "quartz_cron_expression": "0 0 6,15,23 * * ?",
+          "timezone_id": "America/Merida"
         }
       }
     ]

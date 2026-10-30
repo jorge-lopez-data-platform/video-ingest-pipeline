@@ -35,8 +35,12 @@ problemas conocidos de la publicación).
 Revisado el 2026-10-29.
 
 - **Job en producción:** `tiktok_produccion_diaria` (813880207704409), activo
-  (`UNPAUSED`). Dispara a las 02:00, 08:00, 14:00 y 20:00 UTC, y además cada 4 horas.
+  (`UNPAUSED`). Un único disparador: cron `0 0 6,15,23 * * ?` en `America/Merida`.
   Cada ejecución consume crédito de Apify y de LLM.
+- **Notebooks de producción:** `notebooks/produccion/` contiene los 8 notebooks que
+  ejecuta el job, exportados del workspace. Los imports ya apuntan al layout de
+  subpaquetes del repo, que **todavía no está desplegado** en el volumen (ver
+  [Layout de imports](#layout-de-imports)).
 - **Job de ingesta:** `tiktok_ingest_daily` (584295967848266), en pausa.
 - **Tests:** `pytest` pasa en un entorno limpio con `requirements-dev.txt`
   (164 pasan y 28 se saltan por falta de pyspark). Los tests de `slackbot` no se
@@ -110,21 +114,20 @@ actor lanza excepción en lugar de dejar el job en verde con cero datos.
 de guiones virales, y los distribuye así:
 
 ```
-guiones_60s ──► generar_video ──┬──► listar_pendientes ──► subir_borradores ──┐
-                                ├──► publicar_youtube   (for_each) ───────────┤
-                                └──► publicar_facebook  (for_each) ───────────┤
-                                                                              ▼
-                                                                      cerrar_distribucion
+guiones_60s ──► generar_video ──┬──► subir_borradores ──────────────────────┐
+                                ├──► publicar_youtube ──────────────────────┤
+                                └──► publicar_facebook ─────────────────────┤
+                                                                            ▼
+                                                                    cerrar_distribucion
 ```
 
 | Tarea | Función |
 |---|---|
 | `guiones_60s` | selecciona temas y genera guiones de 60 s (`scripts/render/guiones_60s_viral.py`) |
 | `generar_video` | voz con edge-tts, subtítulos, b-roll y personaje (`scripts/render/generar_video_guion.py`) |
-| `listar_pendientes` | cuenta los borradores ya subidos y pendientes en el inbox de TikTok (`scripts/upload/pendientes_borradores.py`) |
-| `subir_borradores` | sube los videos al inbox de TikTok como borrador (`scripts/upload/upload_draft_video.py`), respetando el cupo de pendientes |
-| `publicar_youtube`, `publicar_facebook` | publican cada video con `for_each` |
-| `cerrar_distribucion` | cierra la ejecución y deja el registro de publicación |
+| `subir_borradores` | notebook `subir_cola`: revisa los pendientes y llama a `upload_draft_video` para subir cada video al inbox de TikTok como borrador, respetando el cupo |
+| `publicar_youtube`, `publicar_facebook` | publican cada video (`notebooks/produccion/publicar_*.py`) |
+| `cerrar_distribucion` | cierra la ejecución, avisa a Slack y deja el registro de publicación |
 
 **Publicación en TikTok.** La publicación directa está deshabilitada porque la app no está
 auditada por TikTok: el pipeline solo sube borradores. La publicación final la hace una
@@ -134,7 +137,7 @@ persona desde la app de TikTok.
 
 | Parámetro | Valor | Para qué sirve |
 |---|---|---|
-| `cantidad` | 3 | videos por ejecución |
+| `cantidad` | 2 | videos por ejecución |
 | `guiones_objetivo` | 5 | guiones a generar por corrida |
 | `max_pendientes` | 2 | tope de borradores pendientes en TikTok |
 | `max_charge_usd` | 0.5 | tope de gasto del actor de Apify |
@@ -152,9 +155,10 @@ alertas de Slack del workspace, que hay que volver a añadir al desplegar.
 
 ```
 video-ingest-pipeline/
-├── notebooks/                 Parte A: notebooks de Databricks
-│   ├── 01_ingest_tiktok.py        Apify → bronze → silver → gold
-│   └── 02_download_own_video.py   descarga solo los videos propios
+├── notebooks/                 notebooks de Databricks
+│   ├── 01_ingest_tiktok.py        Parte A: Apify → bronze → silver → gold
+│   ├── 02_download_own_video.py   Parte A: descarga solo los videos propios
+│   └── produccion/                Parte B: los 8 notebooks del job tiktok_produccion_diaria
 ├── ingest_lib/                Código puro, sin Spark, testeable
 │   └── parse.py                   normalización de items del actor
 ├── scripts/                   Parte B: scripts que ejecutan las tareas del job
@@ -245,9 +249,21 @@ databricks jobs get-run-output <TASK_RUN_ID> --profile <PERFIL>
   en YouTube y Facebook.
 - **Ingesta de métricas:** `tiktok_ingest_daily` viene en pausa (`0 0 6 * * ?` UTC). Actívalo
   cuando el coste de Apify esté controlado.
-- **Dos disparadores activos:** el job de producción tiene un cron y un intervalo de 4 horas.
-  `max_concurrent_runs` es 1 y la cola está activa, así que no hay ejecuciones en paralelo,
-  pero conviene confirmar que el doble disparador es intencionado.
+- **Disparador:** el job tiene un único cron (06:00, 15:00 y 23:00 hora de Mérida). Un
+  intervalo de 4 horas que existía en la versión anterior ya no está en el job vivo.
+
+## Layout de imports
+
+- El repo usa subpaquetes: `scripts/util`, `scripts/render`, `scripts/upload` y
+  `scripts/ingest`. Los notebooks de `notebooks/produccion/` importan con esa estructura,
+  por ejemplo `from scripts.util import rutas`.
+- El volumen `/Volumes/tiktok/default/videos/lib` tiene un **layout plano**
+  (`scripts/rutas.py`, `scripts/common.py`…) y se carga con `sys.path`. Hasta desplegar el
+  layout del repo en ese volumen, los notebooks del repo no corren contra producción.
+- Hay divergencia de lógica: `personaje_llm.py`, `titulos.py`, `seleccion.py` y
+  `jesucitos.py` del repo son anteriores a los del volumen, que usan Claude. **El volumen
+  es la referencia de producción** hasta que se sincronice el repo.
+- `scripts/util/llm.py` es idéntico al del volumen y lo necesitan los notebooks.
 
 ## Desarrollo y tests
 
