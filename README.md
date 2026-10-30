@@ -104,7 +104,8 @@ video-ingest-pipeline/
 │   └── parse.py                    # normalización de items, sin Spark (testeable)
 ├── jobs/
 │   ├── ingest_daily.job.json       # job tiktok_ingest_daily (584295967848266)
-│   └── download_own_video.job.json # job tiktok_download_own_video (349008211136613)
+│   ├── download_own_video.job.json # job tiktok_download_own_video (349008211136613)
+│   └── tiktok_produccion_diaria.job.json # job tiktok_produccion_diaria (813880207704409)
 ├── docs/
 │   ├── ARCHITECTURE.md             # diseño, decisiones, idempotencia y fallos
 │   ├── SETUP.md                    # alta del workspace, secrets, volumen, jobs
