@@ -38,12 +38,11 @@ Revisado el 2026-10-29.
   (`UNPAUSED`). Dispara a las 02:00, 08:00, 14:00 y 20:00 UTC, y además cada 4 horas.
   Cada ejecución consume crédito de Apify y de LLM.
 - **Job de ingesta:** `tiktok_ingest_daily` (584295967848266), en pausa.
-- **Tests rotos:** tras la reorganización de carpetas, `pytest` falla al colectar
-  (20 errores de importación: los tests importan `scripts.titulos` y un paquete
-  `slackbot` con rutas antiguas). El paso `pytest` del CI fallará hasta corregirlo.
-- **Limpieza pendiente:** `jobs/` y `docs/` contienen archivos de trabajo (`_*.json`,
-  `_tmp/`) con el email del workspace y el ID del destino de Slack. Ver
-  [Seguridad](#seguridad).
+- **Tests:** `pytest` pasa en un entorno limpio con `requirements-dev.txt`
+  (164 pasan y 28 se saltan por falta de pyspark). Los tests de `slackbot` no se
+  ejecutan aquí porque ese paquete vive en el repo `tiktok-pipeline`.
+- **Identificadores:** el email del workspace y el ID del destino de Slack se retiraron
+  del árbol. Ver [Seguridad](#seguridad).
 
 ## Jobs del workspace
 
@@ -165,7 +164,7 @@ video-ingest-pipeline/
 │   ├── util/                      utilidades: subtítulos, TTS, marca, personaje, cuota
 │   ├── generate_original_video.sh video vertical original con ffmpeg
 │   └── render_job_json.py         resuelve placeholders de jobs/ a build/jobs/
-├── jobs/                      Definiciones de job (*.job.json) y scratch de trabajo
+├── jobs/                      Definiciones de job (*.job.json, *.reset.json) y restore_20261024/
 ├── docs/                      Arquitectura, configuración, operación y diseños
 ├── assets/                    imágenes de marca y fondos
 ├── tests/                     tests de parseo, renderizado y utilidades
@@ -174,9 +173,8 @@ video-ingest-pipeline/
 └── requirements-dev.txt       requests + pytest para desarrollo local
 ```
 
-Los archivos de trabajo de `jobs/` (`_*.json`, `_tmp/`, `*.reset.json` sueltos) no son
-definiciones canónicas. La fuente de verdad de cada job es su `*.job.json` o el job vivo
-en el workspace.
+La fuente de verdad de cada job es su `*.job.json` o el job vivo en el workspace.
+`jobs/restore_20261024/` contiene la copia de restauración validada de los jobs.
 
 ## Requisitos y secretos
 
@@ -260,9 +258,14 @@ pip install -r requirements-dev.txt
 pytest
 ```
 
-> **Estado:** `pytest` no colecta hoy. Hay 20 errores de importación tras la reorganización
-> (`scripts.titulos` y `slackbot.*` apuntan a rutas que ya no existen). Hasta corregirlo, el
-> paso de tests del CI falla.
+> **Estado:** en un venv limpio, `pytest` da 164 pasados y 28 saltados. Los saltados
+> son los tests de `registrar_publicacion` que necesitan pyspark. Los tests de `slackbot`
+> se excluyen si el paquete no está disponible (`tests/conftest.py`); viven en el repo
+> `tiktok-pipeline`.
+>
+> `tests/test_syntax.py` compila todos los `.py` del pipeline. Los notebooks exportados
+> usan `await` de nivel superior, así que se compilan con
+> `PyCF_ALLOW_TOP_LEVEL_AWAIT`.
 
 Los notebooks usan `dbutils` y `spark`, así que no corren en local. Los tests cubren las
 piezas puras: parseo, normalización de items, renderizado de payloads, cuota y utilidades
@@ -276,10 +279,13 @@ de video.
   de test.
 - **Secretos en el secret scope.** Los scripts leen sus claves del secret scope
   `tiktok_pipeline`. `.gitignore` excluye `.env`, `.databricks/`, `build/` y los videos.
-- **Identificadores personales en el historial.** Algunos archivos de `jobs/` y `docs/`
-  contienen el email del workspace y el ID del destino de Slack. No son credenciales, pero
-  no deberían publicarse. Pendiente: retirarlos del árbol y, si el repo es público, valorar
-  reescribir el historial.
+- **Identificadores personales.** El email del workspace se sustituyó por `USUARIO` en
+  todos los archivos. El ID del destino de Slack se sustituyó por
+  `<SLACK_DESTINATION_ID>` en código y documentación, y los bloques
+  `webhook_notifications` se quitaron de los JSON. Los scripts que aplican avisos de
+  Slack necesitan ese ID como parámetro.
+- **Historial.** Los valores anteriores siguen en commits antiguos. Eliminarlos del
+  historial exige reescribirlo; no se ha hecho.
 - **Jobs con placeholders.** Los `*.job.json` usan `USUARIO` y `tu_cuenta`; el usuario real
   solo aparece en el `build/` local.
 
